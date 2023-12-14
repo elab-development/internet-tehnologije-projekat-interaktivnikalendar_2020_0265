@@ -30,5 +30,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('calendar/index', [CalendarController::class, 'index'])->name('calendar.index');
+Route::post('calendar', [CalendarController::class, 'sacuvaj'])->name('calendar.sacuvaj');
+
 
 require __DIR__.'/auth.php';
+
