@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryEventController;
+use App\Http\Controllers\EventNotificationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserEventController;
@@ -30,11 +33,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
 
-Route::resource('events', EventController::class);
+//Route::resource('events', EventController::class);
 
 Route::resource('categories', CategoryController::class);
+
+Route::resource('events', EventController::class)->only(['index', 'show']);
 
 Route::resource('users.events', UserEventController::class);
 //Route::get('/users/{uid}/events/{eid}', [UserEventController::class, 'show']);
 
 Route::resource('categories.events', CategoryEventController::class);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::group(['middleware'=>['auth:sanctum']], function(){
+    Route::get('/profile', function(Request $request){
+        return auth()->user();
+    });
+    Route::resource('events', EventController::class)->only(['update', 'store', 'destroy']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
