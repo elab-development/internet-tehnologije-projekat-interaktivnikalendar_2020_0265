@@ -35,14 +35,18 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 
 //Route::resource('events', EventController::class);
 
+Route::resource('events', EventController::class)->only(['index', 'show']);
+
 Route::resource('categories', CategoryController::class);
 
-Route::resource('events', EventController::class)->only(['index', 'show']);
+Route::resource('notifications', NotificationController::class)->only(['index', 'show']);
 
 Route::resource('users.events', UserEventController::class);
 //Route::get('/users/{uid}/events/{eid}', [UserEventController::class, 'show']);
 
 Route::resource('categories.events', CategoryEventController::class);
+
+Route::resource('events.notifications', EventNotificationController::class);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -52,6 +56,8 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
         return auth()->user();
     });
     Route::resource('events', EventController::class)->only(['update', 'store', 'destroy']);
+    
+    Route::resource('notifications', NotificationController::class)->only(['update', 'store', 'destroy']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

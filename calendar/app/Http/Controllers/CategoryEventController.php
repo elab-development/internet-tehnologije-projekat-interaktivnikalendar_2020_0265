@@ -17,7 +17,7 @@ class CategoryEventController extends Controller
     return response()->json($events);
     }
 
-    public function show($category_id, $event_id)
+    public function show($category_id, $index)
     {
         $events = (Event::get()->where('category_id', $category_id));
         $e = array();
@@ -25,8 +25,8 @@ class CategoryEventController extends Controller
         {
             array_push($e, new EventResource($value));
         }
-        if($event_id-1 < count($e))
-            $event = array_values($e)[$event_id-1];
+        if($index-1 < count($e))
+            $event = array_values($e)[$index-1];
         else
             $event = null;
         if(is_null($event))

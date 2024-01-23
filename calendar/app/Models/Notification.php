@@ -9,6 +9,9 @@ class Notification extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['title', 'description', 'slug', 'hoursBefore', 'event_id'];
+    protected $guarded = ['id'];
+
     public function event(){
         return $this->belongsTo(Event::class);
     }
