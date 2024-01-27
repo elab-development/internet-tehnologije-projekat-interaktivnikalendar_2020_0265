@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -67,5 +68,23 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function changePassword(Request $request, $user_id){
+        $request->validate([
+            'new_password' => 'required',
+            'new_password_confirm' => 'required',
+        ]);
+
+
+        if($request->new_password != $request->new_password_confirm){
+            return response()->json('Passwords do not match!');
+        }
+
+        User::whereId($user_id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json('Password change successful!');
     }
 }
