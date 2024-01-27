@@ -8,7 +8,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserEventController;
-use App\Http\Controllers\UserEventController2;
+use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +49,7 @@ Route::resource('categories.events', CategoryEventController::class);
 
 Route::resource('events.notifications', EventNotificationController::class);
 
+Route::delete('/users/{id}', [UserController::class, 'delete']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -59,6 +60,13 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
     Route::resource('events', EventController::class)->only(['update', 'store', 'destroy']);
     
     Route::resource('notifications', NotificationController::class)->only(['update', 'store', 'destroy']);
+    
 
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::post('roles/assign-permission', [RoleController::class, 'assignPermission']);
+Route::post('roles/remove-permission', [RoleController::class, 'removePermission']);
+Route::resource('roles', RoleController::class);
+Route::group(['middleware' => ['auth']], function() {
 });

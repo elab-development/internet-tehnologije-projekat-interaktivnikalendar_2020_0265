@@ -65,9 +65,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function delete($user_id)
     {
-        //
+        $user = new UserResource(User::find($user_id));
+        User::whereId($user_id)->delete();
+        return response()->json(['User is deleted successfully.', $user]);
     }
 
     public function changePassword(Request $request, $user_id){

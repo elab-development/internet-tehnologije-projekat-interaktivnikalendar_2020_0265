@@ -23,7 +23,7 @@ class EventFactory extends Factory
         $endDate = clone $startDate;
         $endDate->addHours($this->faker->numberBetween(1,24));
         return [
-            'name'=> $this->faker->name(),
+            'name'=> $this->faker->word(),
             'slug'=> $this->faker->slug(),
             'start'=> $startDate,
             'end'=> $endDate,
