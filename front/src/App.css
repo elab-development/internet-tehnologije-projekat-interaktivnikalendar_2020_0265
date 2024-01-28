@@ -39,7 +39,7 @@
 div {
   text-align: center;
   vertical-align: top;
-  margin-bottom: 20px;
+  margin-bottom: 7px;
 }
 
 table {
@@ -51,7 +51,7 @@ table {
 
 th, td {
   border: 1px solid #2c1919;
-  padding: 40px;
+  padding: 38px;
   font-size: 24px;
 }
 
@@ -73,4 +73,8 @@ button {
 /* Additional styling for better spacing */
 button:hover {
   background-color: #d88f8f;
+}
+
+.navbar {
+  border-bottom: 1px solid #dee2e6;
 }
