@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
 }
 
 .App-logo {
@@ -35,4 +34,43 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+div {
+  text-align: center;
+  vertical-align: top;
+  margin-bottom: 20px;
+}
+
+table {
+  margin: auto;
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #2c1919;
+  padding: 40px;
+  font-size: 24px;
+}
+
+th {
+  background-color: #994040;
+}
+button {
+  font-size: 16px;
+  padding: 10px;
+  cursor: pointer;
+  margin: 0 100px; /* Adjust margin for spacing */
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Additional styling for better spacing */
+button:hover {
+  background-color: #d88f8f;
 }

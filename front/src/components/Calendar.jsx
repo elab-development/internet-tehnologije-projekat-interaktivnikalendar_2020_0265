@@ -14,36 +14,60 @@ const Calendar = () => {
     };
   
     const generateCalendar = () => {
-      const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
-      const startingDay = startOfMonth();
-  
-      const calendar = [];
-  
-      let dayCounter = 1;
-  
-      for (let i = 0; i < 6; i++) {
-        const week = [];
-  
-        for (let j = 0; j < 7; j++) {
-          if (i === 0 && j < startingDay) {
-            week.push(<td key={`empty-${j}`}></td>);
-          } else if (dayCounter <= totalDays) {
-            week.push(<td key={dayCounter}>{dayCounter}</td>);
-            dayCounter++;
-          } else {
-            week.push(<td key={`empty-${j}`}></td>);
+        const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
+        const startingDay = startOfMonth();
+        const weeksNeeded = Math.ceil((totalDays + startingDay) / 7);
+      
+        const calendar = [];
+      
+        let dayCounter = 1;
+      
+        for (let i = 0; i < weeksNeeded; i++) {
+          const week = [];
+      
+          for (let j = 0; j < 7; j++) {
+            if (i === 0 && j < startingDay) {
+              week.push(<td key={`empty-${j}`}></td>);
+            } else if (dayCounter <= totalDays) {
+              week.push(<td key={dayCounter}>{dayCounter}</td>);
+              dayCounter++;
+            } else {
+              week.push(<td key={`empty-${j}`}></td>);
+            }
           }
+      
+          calendar.push(<tr key={`week-${i}`}>{week}</tr>);
         }
-  
-        calendar.push(<tr key={`week-${i}`}>{week}</tr>);
-      }
-  
-      return calendar;
+      
+        return calendar;
     };
+    const handleDayClick = (day) => {
+        alert(`Clicked on day ${day}`);
+        // You can implement additional logic for handling day click
+      };
+    
+      const handlePrevMonth = () => {
+        const newDate = new Date(date);
+        newDate.setMonth(date.getMonth() - 1);
+        setDate(newDate);
+      };
+    
+      const handleNextMonth = () => {
+        const newDate = new Date(date);
+        newDate.setMonth(date.getMonth() + 1);
+        setDate(newDate);
+      };
 
   return (
     <div>
-      <h2>{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</h2>
+      <div>
+      <div className="button-container">
+        <button onClick={handlePrevMonth}>Previous Month</button>
+        <h1>{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</h1>
+        <button onClick={handleNextMonth}>Next Month</button>
+      </div>
+
+      </div>
       <table>
         <thead>
           <tr>
