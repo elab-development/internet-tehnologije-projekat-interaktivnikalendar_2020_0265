@@ -48,7 +48,7 @@ class RoleController extends Controller
     
         $role = Role::create(['name' => $request->input('name'), 'guard_name' => 'web']);
     
-        return response()->json('Role created successfully');
+        return response()->json('Role created successfully.');
     }
 
     public function assignPermission(Request $request)
@@ -67,7 +67,7 @@ class RoleController extends Controller
         return response()->json('Permission already assigned');
         $role->syncPermissions($permissions->add($permission));
 
-        return response()->json('Permission assigned successfully');
+        return response()->json('Permission assigned successfully.');
     }
 
     /**
@@ -109,7 +109,7 @@ class RoleController extends Controller
         $role->name = $request->input('name');
         $role->save();
     
-        return response()->json('Role name changed');
+        return response()->json('Role name changed.');
     }
     /**
      * Remove the specified resource from storage.
@@ -120,7 +120,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         DB::table("roles")->where('id',$id)->delete();
-        return response()->json('Role deleted');
+        return response()->json('Role deleted.');
     }
     public function assignRole(Request $request){
         $request->validate([
@@ -143,7 +143,7 @@ class RoleController extends Controller
         }
         DB::table("role_has_permissions")->where('permission_id',Permission::findByName($request->permission)->id)
         ->where('role_id',(Role::findByName($request->name))->id)->delete();
-        return response()->json('Permission removed');
+        return response()->json('Permission removed.');
     }
 
     

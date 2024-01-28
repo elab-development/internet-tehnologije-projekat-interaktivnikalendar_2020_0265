@@ -13,19 +13,6 @@ class PermissionTableSeeder extends Seeder
      */
     public static function run(): void
     {
-        $permissions = [
-           'role-list',
-           'role-create',
-           'role-edit',
-           'role-delete',
-           'category-list',
-           'category-create',
-           'category-edit',
-           'category-delete',
-           'user-delete'
-        ];
-        foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission, 'guard_name' => 'web']);
-        }
+        //moved to UserRolesSeeder.php
     }
 }
