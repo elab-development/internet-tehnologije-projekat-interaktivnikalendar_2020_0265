@@ -13,6 +13,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+    function __construct()
+    {
+         $this->middleware('permission:user-delete', ['only' => ['delete']]);
+    }
+
     public function index()
     {
         $users = User::all();

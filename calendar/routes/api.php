@@ -38,7 +38,7 @@ Route::post('/users/{id}/change-password', [UserController::class, 'changePasswo
 
 Route::resource('events', EventController::class)->only(['index', 'show']);
 
-Route::resource('categories', CategoryController::class);
+Route::resource('categories', CategoryController::class)->only(['index', 'show']);
 
 Route::resource('notifications', NotificationController::class)->only(['index', 'show']);
 
@@ -49,7 +49,6 @@ Route::resource('categories.events', CategoryEventController::class);
 
 Route::resource('events.notifications', EventNotificationController::class);
 
-Route::delete('/users/{id}', [UserController::class, 'delete']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -61,12 +60,13 @@ Route::group(['middleware'=>['auth:sanctum']], function(){
     
     Route::resource('notifications', NotificationController::class)->only(['update', 'store', 'destroy']);
     
+    Route::post('/roles/assign-permission', [RoleController::class, 'assignPermission']);
+    Route::post('/roles/remove-permission', [RoleController::class, 'removePermission']);
+    Route::post('/roles/assign', [RoleController::class, 'assignRole']);
+    Route::resource('roles', RoleController::class);
+    Route::delete('/users/{id}', [UserController::class, 'delete']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'delete']);
+    Route::resource('categories', CategoryController::class)->only(['update', 'store']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
-});
-
-Route::post('roles/assign-permission', [RoleController::class, 'assignPermission']);
-Route::post('roles/remove-permission', [RoleController::class, 'removePermission']);
-Route::resource('roles', RoleController::class);
-Route::group(['middleware' => ['auth']], function() {
 });

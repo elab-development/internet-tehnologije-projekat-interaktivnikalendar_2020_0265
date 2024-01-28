@@ -22,8 +22,11 @@ class RoleController extends Controller
      */
     function __construct()
     {
-
-    }
+         $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:role-create', ['only' => ['store', 'assignPermission', 'assignRole', 'removePermission']]);
+         $this->middleware('permission:role-edit', ['only' => ['update', 'assignRole']]);
+         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+        }
     
     /**
      * Display a listing of the resource.
@@ -43,7 +46,7 @@ class RoleController extends Controller
             'name' => 'required|unique:roles,name'
         ]);
     
-        $role = Role::create(['name' => $request->input('name')]);
+        $role = Role::create(['name' => $request->input('name'), 'guard_name' => 'web']);
     
         return response()->json('Role created successfully');
     }
@@ -55,9 +58,9 @@ class RoleController extends Controller
             'permission' => 'required',
         ]);
     
-        $role = Role::findByName($request->name);
+        $role = Role::findByName($request->name, 'web');
          
-        $permission = Permission::findByName($request->permission);
+        $permission = Permission::findByName($request->permission, 'web');
         $permissions = $role->permissions()->get();
 
         if($permissions->firstWhere("name", $request->permission) != null)
@@ -119,7 +122,14 @@ class RoleController extends Controller
         DB::table("roles")->where('id',$id)->delete();
         return response()->json('Role deleted');
     }
-
+    public function assignRole(Request $request){
+        $request->validate([
+            'username' => 'required',
+            'role' => 'required',
+        ]);
+        (User::get()->firstWhere('username', $request->username))->assignRole($request->role);
+        return response()->json('Role assigned successfully!');
+    }
     public function removePermission(Request $request)
     {
         $this->validate($request, [
@@ -136,13 +146,5 @@ class RoleController extends Controller
         return response()->json('Permission removed');
     }
 
-    public function assignRole(Request $request){
-        $request->validate([
-            'username' => 'required',
-            'role' => 'required',
-        ]);
-
-        (User::get()->where('username', $request->username))->assignRole($request->role);
-        return response()->json('Role assigned successfully!');
-    }
+    
 }

@@ -21,11 +21,11 @@ class PermissionTableSeeder extends Seeder
            'category-list',
            'category-create',
            'category-edit',
-           'category-delete'
+           'category-delete',
+           'user-delete'
         ];
-        
         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission]);
+             Permission::create(['name' => $permission, 'guard_name' => 'web']);
         }
     }
 }
