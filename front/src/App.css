@@ -70,7 +70,7 @@ button {
   align-items: center;
 }
 
-/* Additional styling for better spacing */
+
 button:hover {
   background-color: #d88f8f;
 }
@@ -139,4 +139,69 @@ button:hover {
   border-radius: 8px;
   border: 1px solid grey;
   padding-left: 8px;
+}
+
+.event-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  
+  
+}
+
+.event-card {
+  background-color: #d44b4b;
+  color: #fff;
+  padding: 4px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.event-card:hover {
+  background-color: #74c8f0;
+}
+
+.event-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.event-header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.event-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.event-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.event-btn {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+.event-btn:hover {
+  background-color: #2980b9;
 }

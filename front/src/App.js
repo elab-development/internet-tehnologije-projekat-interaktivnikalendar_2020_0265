@@ -5,6 +5,7 @@ import Navigacija from './components/Navigacija';
 import Login from './components/Login';
 import { BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import Register from './components/Register';
+import Event from './components/Event';
 
 function App() {
   return (
