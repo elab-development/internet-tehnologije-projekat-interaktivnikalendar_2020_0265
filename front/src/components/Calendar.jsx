@@ -4,9 +4,13 @@ import Event from './Event';
 const Calendar = () => {
   const [date, setDate] = useState(new Date());
   const [hoveredDay, setHoveredDay] = useState(null);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isEventVisible, setIsEventVisible] = useState(false);
+  const [startDay, setStartDay] = useState(null);
+  const [endDay, setEndDay] = useState(null);
+  const [clickCount, setClickCount] = useState(0);
   const [events, setEvents] = useState({});
+  const [isEventVisible, setIsEventVisible] = useState(false);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -75,20 +79,47 @@ const Calendar = () => {
   };
 
   const handleDayClick = (day) => {
-    setSelectedEvent(day);
-    setIsEventVisible(true);
+    if (clickCount === 0) {
+      // First click sets the start date
+      setSelectedStartDate({
+        day,
+        month: date.getMonth() + 1,
+        year: date.getFullYear(),
+      });
+      setStartDay(day);
+    } else if (clickCount === 1) {
+      // Second click sets the end date
+      setSelectedEndDate({
+        day,
+        month: date.getMonth() + 1,
+        year: date.getFullYear(),
+      });
+      setEndDay(day);
+      setIsEventVisible(true);
+    }
+
+    // Increment the click count
+    setClickCount((prevClickCount) => prevClickCount + 1);
   };
 
   const handleCloseEvent = (eventName) => {
     setIsEventVisible(false);
 
-    if (eventName) {
-      const key = `${date.getMonth() + 1}-${date.getFullYear()}-${selectedEvent}`;
-      setEvents((prevEvents) => ({
-        ...prevEvents,
-        [key]: [...(prevEvents[key] || []), eventName],
-      }));
+    if (eventName && startDay && endDay) {
+      // Add event if start and end dates are defined
+      for (let day = startDay; day <= endDay; day++) {
+        const key = `${date.getMonth() + 1}-${date.getFullYear()}-${day}`;
+        setEvents((prevEvents) => ({
+          ...prevEvents,
+          [key]: [...(prevEvents[key] || []), eventName],
+        }));
+      }
     }
+
+    // Reset click count and dates
+    setClickCount(0);
+    setStartDay(null);
+    setEndDay(null);
   };
 
   const handlePrevMonth = () => {
@@ -130,8 +161,12 @@ const Calendar = () => {
       </table>
       <div>
         {isEventVisible && (
-          <Event onClose={handleCloseEvent} content={selectedEvent} />
-        )}
+  <Event
+    onClose={handleCloseEvent}
+    startDate={selectedStartDate}
+    endDate={selectedEndDate}
+  />
+)}
       </div>
     </div>
   );
