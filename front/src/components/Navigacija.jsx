@@ -21,7 +21,7 @@ const Navigacija = () => {
     </button>
     <div className="collapse navbar-collapse show" id="navbarNavAltMarkup">
       <div className="navbar-nav">
-        <a className="nav-link active" aria-current="page" href="#">
+        <a className="nav-link active" aria-current="page" href="/calendar">
           Kalendar
         </a>
         <a className="nav-link" href="#">

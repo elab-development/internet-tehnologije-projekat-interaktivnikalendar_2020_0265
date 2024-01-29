@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 
 
@@ -29,11 +30,18 @@ const Login = () => {
         </div>
         <br />
         <div className={"inputContainer"}>
+        <Link to="/calendar">
             <input
                 className={"inputButton"}
                 type="button"
                 value={"Log in"} />
+                 </Link>
         </div>
+        <div className={"inputContainer"}>
+        <span>
+          Don't have an account? <Link to="/register">Register</Link>
+        </span>
+      </div>
     </div>
     )
 }

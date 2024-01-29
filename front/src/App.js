@@ -4,6 +4,7 @@ import Calendar from './components/Calendar';
 import Navigacija from './components/Navigacija';
 import Login from './components/Login';
 import { BrowserRouter, Routes, Route, Link} from 'react-router-dom';
+import Register from './components/Register';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
 
   <Route path = "/calendar" element={<Calendar />}/> 
 <Route path = "/login" element={<Login/>}/>
-
+<Route path = "/register" element={<Register/>}/>
 
 </Routes>
       
