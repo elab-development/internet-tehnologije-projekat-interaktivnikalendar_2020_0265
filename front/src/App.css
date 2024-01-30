@@ -62,7 +62,7 @@ button {
   font-size: 16px;
   padding: 10px;
   cursor: pointer;
-  margin: 0 100px; /* Adjust margin for spacing */
+  margin: 0 100px; 
 }
 .button-container {
   display: flex;
@@ -161,7 +161,7 @@ button:hover {
 }
 
 .event-card:hover {
-  background-color: #74c8f0;
+  background-color: #772523;
 }
 
 .event-modal {
@@ -196,12 +196,81 @@ button:hover {
 .event-btn {
   padding: 10px;
   cursor: pointer;
-  background-color: #d86161;
+  background-color: #d66b67;
   color: #fff;
   border: none;
   border-radius: 4px;
 }
 
 .event-btn:hover {
-  background-color: #a13d3d;
+  background-color: #994040;
 }
+
+/* profil*/
+
+
+
+.profile-container {
+  display: flex;
+  max-width: 800px;
+  margin: auto;
+  background-color: #faf0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.user-details {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #ecd2d2;
+  text-align: center;
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.change-password-btn {
+  padding: 20px;
+  text-align: center;
+}
+
+.change-password-btn button {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  
+  background-color: #ce6f6f;
+
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-btn button:hover {
+  background-color: #b33f3f;
+}
+
+.upcoming-events {
+  flex: 1;
+  padding: 20px;
+}
+
+.event-list {
+  list-style: none;
+  padding: 0;
+}
+
+.event-item {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+
+

@@ -36,7 +36,7 @@ const Navigacija = () => {
               <a className="nav-link active" aria-current="page" href="/calendar">
                 Calendar
               </a>
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/profile">
                 Profil
               </a>
               <a className="nav-link" href="#" onClick={handleLogout}>

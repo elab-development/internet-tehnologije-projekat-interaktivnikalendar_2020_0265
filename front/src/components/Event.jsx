@@ -4,12 +4,13 @@ const Event = ({ onClose, startDate, endDate }) => {
   const [eventName, setEventName] = useState('');
 
   const handleAddEvent = () => {
-    // Pass the event name to the parent component
+    
     onClose(eventName);
+    console.log("dodato");
   };
 
   const handleClose = () => {
-    onClose(); // Close without passing any content
+    onClose(); 
   };
 
   return (

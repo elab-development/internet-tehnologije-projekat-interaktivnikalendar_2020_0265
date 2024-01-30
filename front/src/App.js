@@ -6,6 +6,7 @@ import Login from './components/Login';
 import { BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import Register from './components/Register';
 import Event from './components/Event';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
   <Route path = "/calendar" element={<Calendar />}/> 
 <Route path = "/login" element={<Login/>}/>
 <Route path = "/register" element={<Register/>}/>
+<Route path = "/profile" element={<Profile/>}/>
 
 </Routes>
       
