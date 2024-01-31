@@ -1,5 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
+
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navigacija = () => {
   const navigate = useNavigate();
@@ -8,7 +10,6 @@ const Navigacija = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
 
     if (confirmLogout) {
-      
       navigate('/login');
     }
   };
@@ -17,9 +18,9 @@ const Navigacija = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             Menu
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -33,12 +34,12 @@ const Navigacija = () => {
           </button>
           <div className="collapse navbar-collapse show" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-              <a className="nav-link active" aria-current="page" href="/calendar">
+              <Link className="nav-link" to="/calendar">
                 Calendar
-              </a>
-              <a className="nav-link" href="/profile">
+              </Link>
+              <Link className="nav-link" to="/profile">
                 Profil
-              </a>
+              </Link>
               <a className="nav-link" href="#" onClick={handleLogout}>
                 LogOut
               </a>
@@ -51,5 +52,6 @@ const Navigacija = () => {
 };
 
 export default Navigacija;
+
 
 

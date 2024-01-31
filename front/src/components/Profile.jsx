@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
-const Profile = () => {
+
+const Profile = ({ events }) => {
+  
+  console.log('Events in Profile:', events);
+  
   const user = {
     username: 'Username',
     email: 'username@gmail.com',
     photoUrl: 'https://placekitten.com/100/100',
   };
 
-  const [events, setEvents] = useState([
-    { id: 1, title: 'event 1', date: '2024-02-15' },
-    { id: 2, title: 'event 2', date: '2024-02-20' },
-    
-  ]);
+ 
 
   const handleChangePassword = () => {
-    
+    /*dodati posle*/
     alert('Change Password Clicked');
   };
 
@@ -35,11 +35,15 @@ const Profile = () => {
 
       <div className="upcoming-events">
         <h3>Upcoming Events</h3>
-        {events.length > 0 ? (
-          <ul className="event-list">
-            {events.map((event) => (
-              <li key={event.id} className="event-item">
-                <strong>{event.title}</strong> - {event.date}
+        {Object.keys(events).length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: '0' }}>
+            {Object.entries(events).map(([key, eventList]) => (
+              <li key={key} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+                {eventList.map((event, index) => (
+                  <div key={index}>
+                    <strong>{event}</strong> - {key}
+                  </div>
+                ))}
               </li>
             ))}
           </ul>
@@ -50,6 +54,7 @@ const Profile = () => {
     </div>
   );
 };
+
 
 export default Profile;
 

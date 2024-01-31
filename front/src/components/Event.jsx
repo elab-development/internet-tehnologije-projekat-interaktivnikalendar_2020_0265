@@ -6,7 +6,7 @@ const Event = ({ onClose, startDate, endDate }) => {
   const handleAddEvent = () => {
     
     onClose(eventName);
-    console.log("dodato");
+    console.log(eventName);
   };
 
   const handleClose = () => {
