@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 
 const Event = ({ onClose, startDate, endDate, eventDetails }) => {
   const [eventName, setEventName] = useState('');
+  const [eventCategory, setEventCategory] = useState('');
 
   const handleAddEvent = () => {
-    // Check if eventName is not empty and both start and end dates are provided
+  
     if (eventName.trim() !== '' && startDate && endDate) {
       const event = {
         name: eventName,
+        category: eventCategory, 
         startDate: {
           day: startDate.day,
           month: startDate.month,
@@ -31,11 +33,12 @@ const Event = ({ onClose, startDate, endDate, eventDetails }) => {
   return (
     <div className="event-modal">
       {eventDetails ? (
-        // Display event details
+        //detalji
         <div>
           <div className="event-header">Event Details</div>
           <div className="event-dates">
             <div>Name: {eventDetails.name}</div>
+            <div>Category: {eventDetails.category}</div>
             <div>Start Date: {`${eventDetails.startDate.getDate()}-${eventDetails.startDate.getMonth() + 1}-${eventDetails.startDate.getFullYear()}`}</div>
           <div>End Date: {`${eventDetails.endDate.getDate()}-${eventDetails.endDate.getMonth() + 1}-${eventDetails.endDate.getFullYear()}`}</div>
           </div>
@@ -44,7 +47,7 @@ const Event = ({ onClose, startDate, endDate, eventDetails }) => {
           </button>
         </div>
       ) : (
-        // Display event add form
+        // add event
         <div>
           <div className="event-header">Add Event</div>
           <div className="event-dates">
@@ -58,9 +61,16 @@ const Event = ({ onClose, startDate, endDate, eventDetails }) => {
           <input
             type="text"
             className="event-input"
-            placeholder="Event Name"
+            placeholder="Event Name"S
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
+          />
+          <input
+            type="text"
+            className="event-input"
+            placeholder="Event Category"
+            value={eventCategory}
+            onChange={(e) => setEventCategory(e.target.value)}
           />
           <div className="event-buttons">
             <button className="event-btn" onClick={handleAddEvent}>

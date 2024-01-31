@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import Button from './Button';
 
 const Profile = ({ events }) => {
   
@@ -29,7 +29,9 @@ const Profile = ({ events }) => {
           <p>{user.email}</p>
         </div>
         <div className="change-password-btn">
-          <button onClick={handleChangePassword}>Change Password</button>
+          <Button onClick={handleChangePassword} className="custom-button">
+            Change Password
+          </Button>
         </div>
       </div>
 
@@ -38,12 +40,17 @@ const Profile = ({ events }) => {
         {Object.keys(events).length > 0 ? (
           <ul style={{ listStyle: 'none', padding: '0' }}>
             {Object.entries(events).map(([key, eventList]) => (
-              <li key={key} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+              <li
+                key={key}
+                style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
+              >
                 {eventList.map((event, index) => (
-  <div key={index}>
-    <strong>{event.name}</strong> : {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`} to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
-  </div>
-))}
+                  <div key={index}>
+                    <strong>{event.name}</strong> ({event.category}):{' '}
+                    {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`}{' '}
+                    to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
+                  </div>
+                ))}
               </li>
             ))}
           </ul>

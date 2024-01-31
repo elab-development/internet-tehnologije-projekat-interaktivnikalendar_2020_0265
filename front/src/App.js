@@ -21,26 +21,16 @@ function App() {
   };
   return (
 
-    
-
     <BrowserRouter className="App">
 <Navigacija />
 <Routes>
-
           <Route path="/calendar"  element={<Calendar  events={events} updateEvents={updateEvents} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
           <Route path="/profile" element={<Profile events={events} />}/>
  </Routes>
-      
-     
-   
-
-
     </BrowserRouter>
-   
-
+  
   );
 }
 

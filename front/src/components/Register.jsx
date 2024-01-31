@@ -1,7 +1,17 @@
+// Register.jsx
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from './Button'; 
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const handleRegister = () => {
+   
+    navigate('/calendar');
+  };
+
   return (
     <div className={"mainContainer"}>
       <div className={"titleContainer"}>
@@ -30,12 +40,10 @@ const Register = () => {
       </div>
       <br />
       <div className={"inputContainer"}>
-      <Link to="/calendar">
-        <input
-          className={"inputButton"}
-          type="button"
-          value={"Register"} />
-        </Link>
+        
+        <Button onClick={handleRegister} className="inputButton" type="button">
+          Register
+        </Button>
       </div>
     </div>
   );

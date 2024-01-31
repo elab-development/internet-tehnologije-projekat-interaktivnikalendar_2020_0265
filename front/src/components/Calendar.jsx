@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Event from './Event';
-
+import Button from './Button';
 
 const Calendar = ({ events, updateEvents }) => {
 
@@ -64,19 +64,21 @@ const Calendar = ({ events, updateEvents }) => {
                {dayCounter}
           </div>
           {dayEvents.length > 0 && (
-            <div className="event-container">
-              {dayEvents.map((event, index) => (
-                <div
-                  key={index}
-                  className="event-card"
-                  onClick={(e) => handleEventClick(event, e)}
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                  }}
-                >
-                  {event.name}
+    <div className="event-container">
+      {dayEvents.map((event, index) => (
+        <div
+          key={index}
+          className="event-card"
+          onClick={(e) => handleEventClick(event, e)}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: `${index * 28}px`,
+            marginBottom: '5px',
+          }}
+        >
+          {event.name}
                 </div>
               ))}
             </div>
@@ -130,6 +132,7 @@ const Calendar = ({ events, updateEvents }) => {
         
         updatedEvents[key].push({
           name: event.name,
+          category: event.category,
           startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
           endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
         });
@@ -137,6 +140,7 @@ const Calendar = ({ events, updateEvents }) => {
         
         updatedEvents[key] = [{
           name: event.name,
+          category: event.category,
           startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
           endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
         }];
@@ -171,9 +175,14 @@ const Calendar = ({ events, updateEvents }) => {
     <div>
       <div>
         <div className="button-container">
-          <button onClick={handlePrevMonth}>Previous Month</button>
+        <Button onClick={handlePrevMonth} className="custom-button small-button">
+            Previous Month
+          </Button>
           <h1>{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</h1>
-          <button onClick={handleNextMonth}>Next Month</button>
+          <Button onClick={handleNextMonth} className="custom-button small-button">
+            Next Month
+         
+          </Button>
         </div>
       </div>
       <table>

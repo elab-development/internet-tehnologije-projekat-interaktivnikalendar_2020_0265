@@ -1,14 +1,21 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
-
+import { Link , useNavigate} from 'react-router-dom';
+import Button from './Button';
 
 
 const Login = () => {
     
-    
+    const navigate = useNavigate();
+      
+        const handleLogin = () => {
+          // Handle login logic
+      
+          // Redirect to /calendar after successful login
+          navigate('/calendar');
+        }
     //const navigate = useNavigate();
         
-    
+ 
 
     return (<div className={"mainContainer"}>
         <div className={"titleContainer"}>
@@ -30,12 +37,9 @@ const Login = () => {
         </div>
         <br />
         <div className={"inputContainer"}>
-        <Link to="/calendar">
-            <input
-                className={"inputButton"}
-                type="button"
-                value={"Log in"} />
-                 </Link>
+        <Button onClick={handleLogin} as={Link} to="/calendar" className="custom-button">
+          Login
+        </Button>
         </div>
         <div className={"inputContainer"}>
         <span>
