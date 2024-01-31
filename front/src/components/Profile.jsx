@@ -40,10 +40,10 @@ const Profile = ({ events }) => {
             {Object.entries(events).map(([key, eventList]) => (
               <li key={key} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
                 {eventList.map((event, index) => (
-                  <div key={index}>
-                    <strong>{event}</strong> - {key}
-                  </div>
-                ))}
+  <div key={index}>
+    <strong>{event.name}</strong> : {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`} to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
+  </div>
+))}
               </li>
             ))}
           </ul>
@@ -55,7 +55,4 @@ const Profile = ({ events }) => {
   );
 };
 
-
 export default Profile;
-
-

@@ -12,6 +12,7 @@ const Calendar = ({ events, updateEvents }) => {
   const [isEventVisible, setIsEventVisible] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [selectedEventDetails, setSelectedEventDetails] = useState(null);
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -22,6 +23,10 @@ const Calendar = ({ events, updateEvents }) => {
     return firstDay.getDay();
   };
 
+  const handleEventClick = (event, e) => {
+    e.stopPropagation(); 
+    setSelectedEventDetails(event);
+  };
   const generateCalendar = () => {
     const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
     const startingDay = startOfMonth();
@@ -42,11 +47,11 @@ const Calendar = ({ events, updateEvents }) => {
 
           const key = `${date.getMonth() + 1}-${date.getFullYear()}-${currentDay}`;
           const dayEvents = events[key] || [];
-
+    
           week.push(
             <td
               key={dayCounter}
-              onClick={() => handleDayClick(currentDay)}
+              onClick={() => handleDayClick(currentDay, dayEvents)}
               onMouseEnter={() => setHoveredDay(currentDay)}
               onMouseLeave={() => setHoveredDay(null)}
               style={{
@@ -55,27 +60,39 @@ const Calendar = ({ events, updateEvents }) => {
                 verticalAlign: 'top',
               }}
             >
-              {dayCounter}
-              {dayEvents.length > 0 && (
-                <div className="event-container">
-                  {dayEvents.map((event, index) => (
-                    <div key={index} className="event-card">
-                      {event}
-                    </div>
-                  ))}
+               <div>
+               {dayCounter}
+          </div>
+          {dayEvents.length > 0 && (
+            <div className="event-container">
+              {dayEvents.map((event, index) => (
+                <div
+                  key={index}
+                  className="event-card"
+                  onClick={(e) => handleEventClick(event, e)}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                  }}
+                >
+                  {event.name}
                 </div>
-              )}
-            </td>
-          );
-          dayCounter++;
+              ))}
+            </div>
+          )}
+        </td>
+      );
+
+      dayCounter++;
         } else {
           week.push(<td key={`empty-${j}`}></td>);
         }
       }
-
+  
       calendar.push(<tr key={`week-${i}`}>{week}</tr>);
     }
-
+  
     return calendar;
   };
 
@@ -100,25 +117,42 @@ const Calendar = ({ events, updateEvents }) => {
     setClickCount((prevClickCount) => prevClickCount + 1);
   };
 
-  const handleCloseEvent = (eventName) => {
+  const handleCloseEvent = (event) => {
     setIsEventVisible(false);
-
-    if (eventName && startDay && endDay) {
-      const newEvents = { ...events };
-
-      for (let day = startDay; day <= endDay; day++) {
-        const key = `${date.getMonth() + 1}-${date.getFullYear()}-${day}`;
-        newEvents[key] = [...(newEvents[key] || []), eventName];
+  
+    if (event && startDay && endDay) {
+      const updatedEvents = { ...events };
+      const currentDate = new Date(date.getFullYear(), date.getMonth(), startDay);
+      const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${startDay}`;
+  
+     
+      if (updatedEvents[key]) {
+        
+        updatedEvents[key].push({
+          name: event.name,
+          startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
+          endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
+        });
+      } else {
+        
+        updatedEvents[key] = [{
+          name: event.name,
+          startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
+          endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
+        }];
       }
-      console.log('Updated Events:', newEvents);
-      updateEvents(newEvents);
+  
+      console.log('Updated Events:', updatedEvents);
+      updateEvents(updatedEvents);
     }
-
+  
     setClickCount(0);
     setStartDay(null);
     setEndDay(null);
     console.log(events);
   };
+  
+
 
   const handlePrevMonth = () => {
     const newDate = new Date(date);
@@ -132,6 +166,7 @@ const Calendar = ({ events, updateEvents }) => {
     setDate(newDate);
   };
 
+ 
   return (
     <div>
       <div>
@@ -158,13 +193,20 @@ const Calendar = ({ events, updateEvents }) => {
         </tbody>
       </table>
       <div>
-        {isEventVisible && (
-          <Event
-            onClose={handleCloseEvent}
-            startDate={selectedStartDate}
-            endDate={selectedEndDate}
-          />
+      {isEventVisible && !selectedEventDetails && (
+        <Event
+          onClose={handleCloseEvent}
+          startDate={selectedStartDate}
+          endDate={selectedEndDate}
+        />
         )}
+ {selectedEventDetails && (
+        <Event
+          onClose={() => setSelectedEventDetails(null)}
+          eventDetails={selectedEventDetails}
+        />
+      )}
+
       </div>
     </div>
   );
