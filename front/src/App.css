@@ -44,8 +44,8 @@
 
 
 .small-button {
-  font-size: 17px; /* Adjust the font size as needed */
-  padding: 10px 16px; /* Adjust the padding as needed */
+  font-size: 17px; 
+  padding: 10px 16px; 
   margin: 0 5%;
 }
 
@@ -300,7 +300,7 @@ button:hover {
 }
 
 /*promena info*/
-/* Add this CSS in your stylesheets */
+
 
 .modal-container {
   position: fixed;

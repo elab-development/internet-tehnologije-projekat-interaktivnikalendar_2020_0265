@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import Button from './Button';
 import ChangeInfoModal from './ChangeInfoModal';
 import Event from './Event';
-const Profile = ({ events }) => {
+const Profile = ({ events , setEvents}) => {
   const [isChangeInfoModalVisible, setChangeInfoModalVisible] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
+  const [isChangePasswordMode, setChangePasswordMode] = useState(false); // Add this line
 
   console.log('Events in Profile:', events);
   
@@ -25,22 +26,24 @@ const Profile = ({ events }) => {
   const handleEventDelete = (eventDetails) => {
     const startDate = new Date(eventDetails.startDate);
     const key = `${startDate.getMonth() + 1}-${startDate.getFullYear()}-${startDate.getDate()}`;
-
+  
     const updatedEvents = { ...events };
-
+  
     if (updatedEvents[key]) {
-      updatedEvents[key] = updatedEvents[key].filter(
-        (event) =>
-          !(event.name === eventDetails.name && event.startDate === eventDetails.startDate)
-      );
-
+      updatedEvents[key] = updatedEvents[key].filter((event) => {
+        return !(event.name === eventDetails.name && new Date(event.startDate).getTime() === startDate.getTime());
+      });
+  
       if (updatedEvents[key].length === 0) {
         delete updatedEvents[key];
       }
-
-      //setEvents(updatedEvents); 
-      setSelectedEventDetails(null);
+  
+      
+      
     }
+    setEvents(updatedEvents);
+    setSelectedEventDetails(null);
+  
 
     console.log('Posle brisanja:', events);
   };
@@ -68,6 +71,10 @@ const Profile = ({ events }) => {
     alert('Change Password Clicked');
   };
 
+  const handleChangePasswordModal = () => {
+    setChangeInfoModalVisible(true);
+    setChangePasswordMode(true);
+  };
   
   return (
     <div className="profile-container">
@@ -80,7 +87,7 @@ const Profile = ({ events }) => {
           <p>{user.email}</p>
         </div>
         <div className="change-password-btn">
-          <Button onClick={handleChangePassword} className="custom-button">
+          <Button onClick={handleChangePasswordModal} className="custom-button">
             Change Password
           </Button>
         </div>
@@ -91,7 +98,12 @@ const Profile = ({ events }) => {
       </div>
 
       {isChangeInfoModalVisible && (
-        <ChangeInfoModal onClose={handleCloseChangeInfoModal} onChange={handleChangeInfo} />
+        <ChangeInfoModal
+          onClose={handleCloseChangeInfoModal}
+          onChange={handleChangeInfo}
+          isChangePasswordMode={isChangePasswordMode}
+          onChangePassword={handleChangePassword}
+        />
       )}
       </div>
 

@@ -24,10 +24,11 @@ function App() {
     <BrowserRouter className="App">
 <Navigacija />
 <Routes>
+
           <Route path="/calendar"  element={<Calendar  events={events} updateEvents={updateEvents} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile events={events} />}/>
+          <Route path="/profile" element={<Profile events={events} setEvents={setEvents} />}/>
  </Routes>
     </BrowserRouter>
   
