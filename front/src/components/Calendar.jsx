@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Event from './Event';
 import Button from './Button';
 
-const Calendar = ({ events, updateEvents }) => {
+const Calendar = ({ events, updateEvents  }) => {
 
   const [date, setDate] = useState(new Date());
   const [hoveredDay, setHoveredDay] = useState(null);
@@ -13,7 +13,6 @@ const Calendar = ({ events, updateEvents }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
-  const [isModifyEventVisible, setIsModifyEventVisible] = useState(false);
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -176,7 +175,8 @@ const Calendar = ({ events, updateEvents }) => {
       }
   
       updateEvents(updatedEvents);
-  
+     
+      //onDeleteEvent(eventToDelete);
       setSelectedEventDetails(null);
     }
   
