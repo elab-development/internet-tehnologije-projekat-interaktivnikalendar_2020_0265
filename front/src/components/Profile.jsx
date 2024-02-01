@@ -54,12 +54,19 @@ const Profile = ({ events , setEvents}) => {
       username: newUsername !== '' ? newUsername : prevUser.username,
       email: newEmail !== '' ? newEmail : prevUser.email,
     }));
+   
+   
     handleCloseChangeInfoModal();
     console.log('Updated User:', user);
   };
 
-  const handleOpenChangeInfoModal = () => {
-    setChangeInfoModalVisible(true);
+  const handleOpenChangeInfoModal = (changePasswordMode = false) => {
+    
+    console.log('Before setChangePasswordMode:', isChangePasswordMode);
+  setChangePasswordMode(changePasswordMode);
+  console.log('After setChangePasswordMode:', isChangePasswordMode);
+  setChangeInfoModalVisible(true);
+  console.log('After setChangeInfoModalVisible:', isChangePasswordMode);
   };
 
   const handleCloseChangeInfoModal = () => {
@@ -72,8 +79,9 @@ const Profile = ({ events , setEvents}) => {
   };
 
   const handleChangePasswordModal = () => {
-    setChangeInfoModalVisible(true);
-    setChangePasswordMode(true);
+    console.log('Before handleChangePasswordModal:', isChangePasswordMode);
+  handleOpenChangeInfoModal(true);
+  console.log('After handleChangePasswordModal:', isChangePasswordMode);
   };
   
   return (
@@ -87,12 +95,12 @@ const Profile = ({ events , setEvents}) => {
           <p>{user.email}</p>
         </div>
         <div className="change-password-btn">
-          <Button onClick={handleChangePasswordModal} className="custom-button">
+          <Button onClick={() => handleChangePasswordModal()} className="custom-button">
             Change Password
           </Button>
         </div>
         <div className="change-info-btn">
-        <Button onClick={handleOpenChangeInfoModal} className="small-button">
+        <Button onClick={() => handleOpenChangeInfoModal()}  className="small-button">
           Change Username/Email
         </Button>
       </div>
