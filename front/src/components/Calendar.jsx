@@ -13,6 +13,7 @@ const Calendar = ({ events, updateEvents }) => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
+  const [isModifyEventVisible, setIsModifyEventVisible] = useState(false);
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -27,6 +28,8 @@ const Calendar = ({ events, updateEvents }) => {
     e.stopPropagation(); 
     setSelectedEventDetails(event);
   };
+
+
   const generateCalendar = () => {
     const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
     const startingDay = startOfMonth();
@@ -137,7 +140,7 @@ const Calendar = ({ events, updateEvents }) => {
           endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
         });
       } else {
-        
+          // >:(
         updatedEvents[key] = [{
           name: event.name,
           category: event.category,
@@ -156,7 +159,31 @@ const Calendar = ({ events, updateEvents }) => {
     console.log(events);
   };
   
+  const handleEventDelete = (eventToDelete) => {
+    const startDate = new Date(eventToDelete.startDate);
+    const key = `${startDate.getMonth() + 1}-${startDate.getFullYear()}-${startDate.getDate()}`;
+  
+    const updatedEvents = { ...events };
+  
+    if (updatedEvents[key]) {
+      // >:(
+      updatedEvents[key] = updatedEvents[key].filter(
+        (event) => !(event.name === eventToDelete.name && event.startDate === eventToDelete.startDate)
+      );
+  
+      if (updatedEvents[key].length === 0) {
+        delete updatedEvents[key];
+      }
+  
+      updateEvents(updatedEvents);
+  
+      setSelectedEventDetails(null);
+    }
+  
+    console.log("Posle brisanja:", events);
+  };
 
+  
 
   const handlePrevMonth = () => {
     const newDate = new Date(date);
@@ -213,6 +240,7 @@ const Calendar = ({ events, updateEvents }) => {
         <Event
           onClose={() => setSelectedEventDetails(null)}
           eventDetails={selectedEventDetails}
+          onDelete={handleEventDelete}
         />
       )}
 

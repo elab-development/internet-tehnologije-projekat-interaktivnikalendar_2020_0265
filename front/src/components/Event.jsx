@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Event = ({ onClose, startDate, endDate, eventDetails }) => {
+const Event = ({ onClose, startDate, endDate, eventDetails, onDelete , onModify}) => {
   const [eventName, setEventName] = useState('');
   const [eventCategory, setEventCategory] = useState('');
 
@@ -26,10 +26,13 @@ const Event = ({ onClose, startDate, endDate, eventDetails }) => {
     }
   };
 
+  
   const handleClose = () => {
     onClose();
   };
-
+  const handleDelete = () => {
+    onDelete(eventDetails);
+  };
   return (
     <div className="event-modal">
       {eventDetails ? (
@@ -42,6 +45,9 @@ const Event = ({ onClose, startDate, endDate, eventDetails }) => {
             <div>Start Date: {`${eventDetails.startDate.getDate()}-${eventDetails.startDate.getMonth() + 1}-${eventDetails.startDate.getFullYear()}`}</div>
           <div>End Date: {`${eventDetails.endDate.getDate()}-${eventDetails.endDate.getMonth() + 1}-${eventDetails.endDate.getFullYear()}`}</div>
           </div>
+          <button className="event-btn" onClick={handleDelete}>
+            Delete Event
+          </button>
           <button className="event-btn" onClick={handleClose}>
             Close
           </button>
