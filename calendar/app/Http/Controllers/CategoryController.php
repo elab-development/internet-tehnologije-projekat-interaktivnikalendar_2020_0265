@@ -62,7 +62,7 @@ class CategoryController extends Controller
     
         return response()->json(['Category is updated successfully.', new CategoryResource($category)]);
     }
-    public function delete($category_id)
+    public function destroy($category_id)
     {
         $category = new CategoryResource(Category::find($category_id));
         Category::whereId($category_id)->delete();

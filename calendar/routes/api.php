@@ -27,46 +27,38 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('events/{id}', [EventTestController::class, 'show']);
-//Route::get('events', [EventTestController::class, 'index']);
-
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-Route::post('/users/{id}/change-password', [UserController::class, 'changePassword']);
-
-//Route::resource('events', EventController::class);
-
-Route::resource('events', EventController::class)->only(['index', 'show']);
-
-Route::resource('categories', CategoryController::class)->only(['index', 'show']);
-
-Route::resource('notifications', NotificationController::class)->only(['index', 'show']);
-
-Route::resource('users.events', UserEventController::class);
-//Route::get('/users/{uid}/events/{eid}', [UserEventController::class, 'show']);
-
-Route::resource('categories.events', CategoryEventController::class);
-
-Route::resource('events.notifications', EventNotificationController::class);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/users/change-password', [UserController::class, 'changePassword']);
 
-Route::group(['middleware'=>['auth:sanctum']], function(){
-    Route::get('/profile', function(Request $request){
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/profile', function (Request $request) {
         return auth()->user();
     });
-    Route::resource('events', EventController::class)->only(['update', 'store', 'destroy']);
-    
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::delete('/users/{id}', [UserController::class, 'delete']);
+
+    Route::resource('events', EventController::class);
+
+    Route::resource('categories', CategoryController::class);
+
+    Route::resource('notifications', NotificationController::class)->only(['index', 'show']);
+
+    Route::resource('users.events', UserEventController::class);
+
+    Route::resource('categories.events', CategoryEventController::class);
+
+    Route::resource('events.notifications', EventNotificationController::class);
+
     Route::resource('notifications', NotificationController::class)->only(['update', 'store', 'destroy']);
-    
+
     Route::post('/roles/assign-permission', [RoleController::class, 'assignPermission']);
     Route::post('/roles/remove-permission', [RoleController::class, 'removePermission']);
     Route::post('/roles/assign', [RoleController::class, 'assignRole']);
     Route::resource('roles', RoleController::class);
-    Route::delete('/users/{id}', [UserController::class, 'delete']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'delete']);
-    Route::resource('categories', CategoryController::class)->only(['update', 'store']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

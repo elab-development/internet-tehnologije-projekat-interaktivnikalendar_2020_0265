@@ -64,7 +64,7 @@ public function destroy(Event $event)
 {
     $event->delete();
 
-    return response()->json('Event is deleted successfully.');
+    return response()->json((['Event is deleted successfully.', $event]));
 }
 
     public function index()

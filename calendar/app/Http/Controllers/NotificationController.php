@@ -67,7 +67,7 @@ class NotificationController extends Controller
     
     public function destroy(Notification $notification)
     {
-        if((Event::find($notification->event_id))->user_id != Auth::user()->id)
+        if(Event::find($notification->event_id) != null && (Event::find($notification->event_id))->user_id != Auth::user()->id)
         return response(['message' => 'Notification must be for logged users event!'], 403);
 
         $notification->delete();

@@ -77,8 +77,9 @@ class UserController extends Controller
         return response()->json(['User is deleted successfully.', $user]);
     }
 
-    public function changePassword(Request $request, $user_id){
+    public function changePassword(Request $request){
         $request->validate([
+            'email' => 'required',
             'new_password' => 'required',
             'new_password_confirm' => 'required',
         ]);
@@ -88,7 +89,7 @@ class UserController extends Controller
             return response()->json('Passwords do not match!');
         }
 
-        User::whereId($user_id)->update([
+        User::get()->firstWhere('email', $request->email)->update([
             'password' => Hash::make($request->new_password)
         ]);
 
