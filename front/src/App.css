@@ -1,0 +1,347 @@
+/*.App {
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}*/
+
+/*BUTTON*/
+
+.custom-button {
+  border: none;
+  background: rgb(204, 91, 91);
+  color: white;
+  padding: 12px 24px;
+  margin: 8px;
+  font-size: 24px;
+  border-radius: 8px;
+  cursor: pointer;
+
+}
+
+
+
+.small-button {
+  font-size: 17px; 
+  padding: 10px 16px; 
+  margin: 0 5%;
+}
+
+.custom-button button:hover {
+  background-color: #b33f3f;
+}
+
+
+
+.navbar{
+  
+  height: 50px;
+}
+
+/*kalendar*/
+
+div {
+  text-align: center;
+  vertical-align: top;
+  margin-bottom: 7px;
+}
+
+table {
+  margin: auto;
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #2c1919;
+  padding: 37px;
+  font-size: 24px;
+}
+
+th {
+  background-color: #994040;
+}
+button {
+  font-size: 16px;
+  padding: 10px;
+  cursor: pointer;
+  margin: 0 100px; 
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+button:hover {
+  background-color: #d88f8f;
+}
+
+.navbar {
+  border-bottom: 1px solid #dee2e6;
+}
+.mainContainer {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  font-size: 64px;
+  font-weight: bolder;
+  align-items: center;
+  justify-content: center;
+}
+
+.resultContainer, .historyItem { 
+  flex-direction: row;
+  display: flex;
+  width: 400px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.historyContainer {
+  flex-direction: column;
+  display: flex;
+  height: 200px;
+  align-items: center;
+  flex-grow: 5;
+  justify-content: flex-start;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 260px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.inputContainer > .errorLabel {
+  color: red;
+  font-size: 12px;
+}
+
+.inputBox {
+  height: 48px;
+  width: 400px;
+  font-size: large;
+  border-radius: 8px;
+  border: 1px solid grey;
+  padding-left: 8px;
+}
+
+.event-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  
+  
+}
+
+.event-card {
+  background-color: #d44b4bea;
+  color: #fff;
+  padding: 4px;
+  margin-bottom: 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+
+.event-card:hover {
+  background-color: #772523;
+}
+
+.event-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.event-header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.event-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.event-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.event-btn {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #d66b67;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+.event-btn:hover {
+  background-color: #994040;
+}
+
+/* profil*/
+
+
+
+.profile-container {
+  display: flex;
+  max-width: 800px;
+  margin: auto;
+  background-color: #faf0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.user-details {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #ecd2d2;
+  text-align: center;
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.change-password-btn {
+  padding: 20px;
+  text-align: center;
+}
+
+.change-password-btn button {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  
+  background-color: #ce6f6f;
+
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-btn button:hover {
+  background-color: #b33f3f;
+}
+
+.upcoming-events {
+  flex: 1;
+  padding: 20px;
+}
+
+.event-list {
+  list-style: none;
+  padding: 0;
+}
+
+.event-item {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+/*promena info*/
+
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.modal-header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-btn {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #d66b67;
+
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+.modal-btn:hover {
+  background-color: #aa2d2d;
+}
+
