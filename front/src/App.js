@@ -3,7 +3,7 @@ import './App.css';
 import Calendar from './components/Calendar';
 import Navigacija from './components/Navigacija';
 import Login from './components/Login';
-import { BrowserRouter, Routes, Route, Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, redirect} from 'react-router-dom';
 import Register from './components/Register';
 import Event from './components/Event';
 import Profile from './components/Profile';
@@ -29,6 +29,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile events={events} setEvents={setEvents} />}/>
+          <Route path="/" element={<Login />} />
  </Routes>
     </BrowserRouter>
   

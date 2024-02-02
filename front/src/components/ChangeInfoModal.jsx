@@ -48,7 +48,7 @@ const ChangeInfoModal = ({ onClose, onChange, isChangePasswordMode, onChangePass
 />
 <label>{isChangePasswordMode ? 'Confirm New Password:' : 'New Email:'}</label>
 <input
-  type="password"
+ type={isChangePasswordMode ? 'password' : 'text'}
   value={isChangePasswordMode ? confirmNewPassword : newEmail}
   onChange={(e) =>
     isChangePasswordMode
