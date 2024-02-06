@@ -8,13 +8,13 @@ const Login = () => {
     
     const navigate = useNavigate();
       
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPopup, setShowPopup] = useState(false);
   
     const handleLogin = (e) => {
       e.preventDefault();
-      axios.post("http://127.0.0.1:8000/api/login", {email: username,
+      axios.post("api/login", {email: email,
     password: password}).then((res)=>{console.log(res.data);
     if(res.data.success === true){
       window.sessionStorage.setItem("auth_token", res.data.access_token);
@@ -23,8 +23,8 @@ const Login = () => {
     }).catch((e)=>{
       console.log(e);
     });
-      if (username.trim() === '' || password.trim() === '') {
-        alert('Please enter both username and password.');
+      if (email.trim() === '' || password.trim() === '') {
+        alert('Please enter both email and password.');
       } else {
       }
     };
@@ -42,8 +42,8 @@ const Login = () => {
           <input
             placeholder="Enter your email here"
             className="inputBox"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <br />

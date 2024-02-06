@@ -1,23 +1,31 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button'; // Assuming you have a Button component
+import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleRegister = (e) => {
+    e.preventDefault();
     const username = document.getElementById('registerUsername').value;
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
+
 
     if (username.trim() === '' || email.trim() === '' || password.trim() === '' || confirmPassword.trim() === '') {
       alert('Please fill in all fields.');
     } else if (password !== confirmPassword) {
       alert('Passwords do not match.');
     } else {
-      // Perform registration logic
-      navigate('/calendar');
+      
+    axios.post("api/register", {username: username, email: email,
+      password: password}).then((res)=>{console.log(res.data);
+        navigate('/login');
+      }).catch((e)=>{
+        console.log(e);
+      });
     }
   };
 
