@@ -2,6 +2,7 @@ import React from 'react';
 import { useState,  useEffect } from 'react';
 
 import { Link, useNavigate,useLocation, } from 'react-router-dom';
+import axios from 'axios';
 
 const Navigacija = () => {
 
@@ -22,7 +23,24 @@ const Navigacija = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
 
     if (confirmLogout) {
-      navigate('/login');
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'api/logout',
+        headers: { 
+          'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+        },
+      };
+      
+      axios(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        window.sessionStorage.setItem("auth_token", null);
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
   };
 
@@ -32,7 +50,7 @@ const Navigacija = () => {
         <div>
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-              <Link className="navbar-brand" to="/">
+              <Link className="navbar-brand" to="/calendar">
                 Menu
               </Link>
               <button

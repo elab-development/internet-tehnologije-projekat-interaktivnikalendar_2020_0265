@@ -14,6 +14,7 @@ const Calendar = ({ events, updateEvents  }) => {
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
 
+
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };

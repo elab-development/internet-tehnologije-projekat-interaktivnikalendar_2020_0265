@@ -4,7 +4,7 @@ import Button from './Button';
 import { useState } from 'react';
 import axios from "axios";
 
-const Login = () => {
+const Login = ({addToken}) => {
     
     const navigate = useNavigate();
       
@@ -18,10 +18,12 @@ const Login = () => {
     password: password}).then((res)=>{console.log(res.data);
     if(res.data.success === true){
       window.sessionStorage.setItem("auth_token", res.data.access_token);
+      addToken(res.data.access_token);
       navigate('/calendar');
     }
     }).catch((e)=>{
       console.log(e);
+      alert('Invalid credentials.');
     });
       if (email.trim() === '' || password.trim() === '') {
         alert('Please enter both email and password.');
