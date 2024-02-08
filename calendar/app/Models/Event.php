@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'slug', 'start', 'end', 'category_id', 'user_id'];
+    protected $fillable = ['name', 'slug', 'start', 'end', 'category_id', 'user_id', 'color'];
     protected $guarded = ['id'];
 
     public function category()

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Button from './Button';
 import ChangeInfoModal from './ChangeInfoModal';
 import Event from './Event';
-const Profile = ({ events , setEvents}) => {
+const Profile = ({ events, setEvents }) => {
   const [isChangeInfoModalVisible, setChangeInfoModalVisible] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isChangePasswordMode, setChangePasswordMode] = useState(false); // Add this line
 
   console.log('Events in Profile:', events);
-  
+
   const [user, setUser] = useState({
     username: 'Username',
     email: 'username@gmail.com',
@@ -26,24 +26,24 @@ const Profile = ({ events , setEvents}) => {
   const handleEventDelete = (eventDetails) => {
     const startDate = new Date(eventDetails.startDate);
     const key = `${startDate.getMonth() + 1}-${startDate.getFullYear()}-${startDate.getDate()}`;
-  
+
     const updatedEvents = { ...events };
-  
+
     if (updatedEvents[key]) {
       updatedEvents[key] = updatedEvents[key].filter((event) => {
         return !(event.name === eventDetails.name && new Date(event.startDate).getTime() === startDate.getTime());
       });
-  
+
       if (updatedEvents[key].length === 0) {
         delete updatedEvents[key];
       }
-  
-      
-      
+
+
+
     }
     setEvents(updatedEvents);
     setSelectedEventDetails(null);
-  
+
 
     console.log('Posle brisanja:', events);
   };
@@ -54,19 +54,19 @@ const Profile = ({ events , setEvents}) => {
       username: newUsername !== '' ? newUsername : prevUser.username,
       email: newEmail !== '' ? newEmail : prevUser.email,
     }));
-   
-   
+
+
     handleCloseChangeInfoModal();
     console.log('Updated User:', user);
   };
 
   const handleOpenChangeInfoModal = (changePasswordMode = false) => {
-    
+
     console.log('Before setChangePasswordMode:', isChangePasswordMode);
-  setChangePasswordMode(changePasswordMode);
-  console.log('After setChangePasswordMode:', isChangePasswordMode);
-  setChangeInfoModalVisible(true);
-  console.log('After setChangeInfoModalVisible:', isChangePasswordMode);
+    setChangePasswordMode(changePasswordMode);
+    console.log('After setChangePasswordMode:', isChangePasswordMode);
+    setChangeInfoModalVisible(true);
+    console.log('After setChangeInfoModalVisible:', isChangePasswordMode);
   };
 
   const handleCloseChangeInfoModal = () => {
@@ -80,10 +80,10 @@ const Profile = ({ events , setEvents}) => {
 
   const handleChangePasswordModal = () => {
     console.log('Before handleChangePasswordModal:', isChangePasswordMode);
-  handleOpenChangeInfoModal(true);
-  console.log('After handleChangePasswordModal:', isChangePasswordMode);
+    handleOpenChangeInfoModal(true);
+    console.log('After handleChangePasswordModal:', isChangePasswordMode);
   };
-  
+
   return (
     <div className="profile-container">
       <div className="user-details">
@@ -100,19 +100,19 @@ const Profile = ({ events , setEvents}) => {
           </Button>
         </div>
         <div className="change-info-btn">
-        <Button onClick={() => handleOpenChangeInfoModal()}  className="small-button">
-          Change Username/Email
-        </Button>
-      </div>
+          <Button onClick={() => handleOpenChangeInfoModal()} className="small-button">
+            Change Username/Email
+          </Button>
+        </div>
 
-      {isChangeInfoModalVisible && (
-        <ChangeInfoModal
-          onClose={handleCloseChangeInfoModal}
-          onChange={handleChangeInfo}
-          isChangePasswordMode={isChangePasswordMode}
-          onChangePassword={handleChangePassword}
-        />
-      )}
+        {isChangeInfoModalVisible && (
+          <ChangeInfoModal
+            onClose={handleCloseChangeInfoModal}
+            onChange={handleChangeInfo}
+            isChangePasswordMode={isChangePasswordMode}
+            onChangePassword={handleChangePassword}
+          />
+        )}
       </div>
 
       <div className="upcoming-events">
@@ -124,8 +124,9 @@ const Profile = ({ events , setEvents}) => {
                 key={key}
                 style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
               >
+                {console.log(eventList)}
                 {eventList.map((event, index) => (
- <div key={index} onClick={() => handleEventClick(event)}>                    <strong>{event.name}</strong> ({event.category}):{' '}
+                  <div key={index} onClick={() => handleEventClick(event)}>                    <strong>{event.name}</strong> ({(event.category != null) ? event.category.name : 'none'}):{' '}
                     {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`}{' '}
                     to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
                   </div>

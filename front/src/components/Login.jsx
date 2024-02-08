@@ -4,7 +4,7 @@ import Button from './Button';
 import { useState } from 'react';
 import axios from "axios";
 
-const Login = ({addToken}) => {
+const Login = ({addToken, updateCurrentUser}) => {
     
     const navigate = useNavigate();
       
@@ -19,6 +19,8 @@ const Login = ({addToken}) => {
     if(res.data.success === true){
       window.sessionStorage.setItem("auth_token", res.data.access_token);
       addToken(res.data.access_token);
+      window.sessionStorage.setItem("user_id", res.data.user_id);
+      updateCurrentUser(res.data.user_id);
       navigate('/calendar');
     }
     }).catch((e)=>{

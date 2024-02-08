@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('end');
             $table->timestamps();
             $table->foreignId('category_id');
+            $table->string('color')->default('#d44b4bea');
         });
     }
 

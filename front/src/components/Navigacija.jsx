@@ -36,6 +36,7 @@ const Navigacija = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         window.sessionStorage.setItem("auth_token", null);
+        window.sessionStorage.setItem("user_id", null);
         navigate('/login');
       })
       .catch((error) => {

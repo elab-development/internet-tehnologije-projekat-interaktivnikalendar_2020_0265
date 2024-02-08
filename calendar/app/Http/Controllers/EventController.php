@@ -18,7 +18,7 @@ public function store(Request $request)
         'slug'=>'required|string|max:100',
         'start'=>'required',
         'end'=>'required',
-        'category_id'=>'required'
+        'category_id'=>'required',
     ]);
 
     if($validator->fails())
@@ -30,7 +30,8 @@ public function store(Request $request)
         'start'=>$request->start,
         'end'=>$request->end,
         'category_id'=>$request->category_id,
-        'user_id'=>Auth::user()->id
+        'user_id'=>Auth::user()->id,
+        'color'=>$request->color
     ]);
 
     return response()->json(['Event is created successfully.', new EventResource($event)]);

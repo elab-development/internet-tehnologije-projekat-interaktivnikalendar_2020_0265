@@ -345,3 +345,48 @@ button:hover {
   background-color: #aa2d2d;
 }
 
+.event-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+}
+
+.number-selector {
+  display: flex;
+  align-items: center;
+  margin: 0%;
+}
+
+.arrow-button {
+  font-size: 0.8em;
+  padding: 4px 8px;
+  margin:0%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.event-input-time {
+  width: 40px; 
+  margin: 0 8px; 
+}
+
+.color-picker {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.color-button {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/* You can add additional styling to highlight the selected color */
+.color-button.selected {
+  border: 2px solid black;
+}

@@ -21,10 +21,12 @@ class EventResource extends JsonResource
         return[
             'id'=>$this->resource->id,
             'name'=>$this->resource->name,
+            'slug'=>$this->resource->slug,
             'start'=>$this->resource->start,
             'end'=>$this->resource->end,
             'category'=>new CategoryResource($this->resource->category),
-            'user'=>new UserResource(User::find($this->resource->user_id))
+            'user'=>new UserResource(User::find($this->resource->user_id)),
+            'color'=>$this->resource->color,
         ];
     }
 }

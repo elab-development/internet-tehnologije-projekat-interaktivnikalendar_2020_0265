@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Event from './Event';
 import Button from './Button';
+import axios from 'axios';
 
-const Calendar = ({ events, updateEvents  }) => {
+const Calendar = ({ events, updateEvents, currentUser, categories, updateCategories }) => {
 
   const [date, setDate] = useState(new Date());
   const [hoveredDay, setHoveredDay] = useState(null);
@@ -14,6 +15,51 @@ const Calendar = ({ events, updateEvents  }) => {
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
 
+  useEffect(()=>{
+    const axiosInstance = axios.create({
+      headers: {
+        'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+      }
+    });
+
+    if(events == null){
+      axiosInstance.get("api/events").then((res) => {
+        console.log(res.data);
+        const updatedEvents = { ...events };
+        res.data.events.forEach(event => {
+          if(event.user != null && event.user.id == window.sessionStorage.getItem("user_id")){
+      const eventDate = new Date(event.start);
+      const key = `${eventDate.getMonth() + 1}-${eventDate.getFullYear()}-${eventDate.getDate()}`;
+     
+        updatedEvents[key] = [{
+          name: event.name,
+          slug: event.slug,
+          category: event.category,
+          startDate: new Date(event.start),
+          endDate: new Date(event.end),
+          category: event.category,
+          color: event.color
+        }];
+  
+          }
+        });
+        console.log('Updated Events:', updatedEvents);
+        updateEvents(updatedEvents);
+      })
+    }
+    if(categories == null){
+      axiosInstance.get("api/categories").then((res) => {
+        const updatedCategories = res.data.categories.map(category => ({
+          id: category.id,
+          name: category.name
+        }));
+
+      console.log('Updated Categories:', updatedCategories);
+      updateCategories(updatedCategories);
+      })
+    }
+    
+  });
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -49,7 +95,7 @@ const Calendar = ({ events, updateEvents  }) => {
           const isDayHovered = currentDay === hoveredDay;
 
           const key = `${date.getMonth() + 1}-${date.getFullYear()}-${currentDay}`;
-          const dayEvents = events[key] || [];
+          const dayEvents = events && events[key] ? events[key] : [];
     
           week.push(
             <td
@@ -79,6 +125,7 @@ const Calendar = ({ events, updateEvents  }) => {
             right: 0,
             top: `${index * 28}px`,
             marginBottom: '5px',
+            backgroundColor: `${event.color}`
           }}
         >
           {event.name}
@@ -135,20 +182,42 @@ const Calendar = ({ events, updateEvents  }) => {
         
         updatedEvents[key].push({
           name: event.name,
+          slug: event.slug,
           category: event.category,
           startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
           endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
+          color: event.color
         });
       } else {
           // >:(
         updatedEvents[key] = [{
           name: event.name,
+          slug: event.slug,
           category: event.category,
           startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
           endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
+          color: event.color
         }];
       }
-  
+
+      const axiosInstance = axios.create({
+        headers: {
+          'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+        }
+      });
+      
+      const headers = {
+        'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token")
+      };
+      console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
+      axiosInstance.post("api/events", {name: event.name,
+        slug: event.slug, start: `${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
+        end: `${event.endDate.year}-${event.endDate.month}-${event.endDate.day}`, category_id: event.category, color: event.color
+      }).then((res)=>{console.log(res.data);
+        }).catch((e)=>{
+          console.log(e);
+        });
+
       console.log('Updated Events:', updatedEvents);
       updateEvents(updatedEvents);
     }
@@ -235,6 +304,7 @@ const Calendar = ({ events, updateEvents  }) => {
           onClose={handleCloseEvent}
           startDate={selectedStartDate}
           endDate={selectedEndDate}
+          categories={categories}
         />
         )}
  {selectedEventDetails && (
