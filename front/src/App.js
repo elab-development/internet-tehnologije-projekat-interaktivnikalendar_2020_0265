@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import Register from './components/Register';
 import Event from './components/Event';
 import Profile from './components/Profile';
+import ForgotPassword from './components/ForgotPassword';
 import React, { useState } from 'react';
 
 
@@ -16,7 +17,8 @@ function App() {
   const [events, setEvents] = useState();
   const [categories, setCategories] = useState();
   const [token, setToken] = useState();
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState({username: 'Username',
+  email: 'username@gmail.com'});
 
   const updateEvents = (newEvents) => {
     setEvents(newEvents);
@@ -43,7 +45,8 @@ function App() {
           <Route path="/calendar"  element={<Calendar  events={events} updateEvents={updateEvents} categories={categories} updateCategories={updateCategories}/>} />
           <Route path="/login" element={<Login addToken={addToken} updateCurrentUser = {updateCurrentUser}/>} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile events={events} setEvents={setEvents} />}/>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/profile" element={<Profile events={events} setEvents={setEvents} currentUser={currentUser} />}/>
           <Route path="/" element={<Navigate to="/login" />} />
  </Routes>
     </BrowserRouter>

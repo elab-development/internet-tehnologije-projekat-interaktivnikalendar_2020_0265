@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from './Button';
 import ChangeInfoModal from './ChangeInfoModal';
 import Event from './Event';
-const Profile = ({ events, setEvents }) => {
+const Profile = ({ events, setEvents, currentUser }) => {
   const [isChangeInfoModalVisible, setChangeInfoModalVisible] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isChangePasswordMode, setChangePasswordMode] = useState(false); // Add this line
@@ -10,8 +10,8 @@ const Profile = ({ events, setEvents }) => {
   console.log('Events in Profile:', events);
 
   const [user, setUser] = useState({
-    username: 'Username',
-    email: 'username@gmail.com',
+    username: currentUser.username,
+    email: currentUser.email,
     photoUrl: 'https://placekitten.com/100/100',
   });
 

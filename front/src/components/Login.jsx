@@ -14,23 +14,31 @@ const Login = ({addToken, updateCurrentUser}) => {
   
     const handleLogin = (e) => {
       e.preventDefault();
+      
+      if (email.trim() === '' || password.trim() === '') {
+        alert('Please enter both email and password.');
+      } else {
       axios.post("api/login", {email: email,
     password: password}).then((res)=>{console.log(res.data);
     if(res.data.success === true){
       window.sessionStorage.setItem("auth_token", res.data.access_token);
       addToken(res.data.access_token);
       window.sessionStorage.setItem("user_id", res.data.user_id);
-      updateCurrentUser(res.data.user_id);
+      const axiosInstance = axios.create({
+        headers: {
+          'Authorization': 'Bearer '+ res.data.access_token,
+        }
+      });
+        axiosInstance.get(`api/users/${res.data.user_id}`).then((res) => {
+          updateCurrentUser({username: res.data.username, email: res.data.email});
+        });
       navigate('/calendar');
     }
     }).catch((e)=>{
       console.log(e);
       alert('Invalid credentials.');
     });
-      if (email.trim() === '' || password.trim() === '') {
-        alert('Please enter both email and password.');
-      } else {
-      }
+  }
     };
     
         
@@ -69,6 +77,11 @@ const Login = ({addToken, updateCurrentUser}) => {
         <div className="inputContainer">
           <span>
             Don't have an account? <Link to="/register">Register</Link>
+          </span>
+        </div>
+        <div className="inputContainer">
+          <span>
+            Forgot password? <Link to="/forgot-password">Change password</Link>
           </span>
         </div>
   

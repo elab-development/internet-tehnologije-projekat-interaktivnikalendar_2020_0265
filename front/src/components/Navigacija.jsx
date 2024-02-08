@@ -12,8 +12,9 @@ const Navigacija = () => {
   useEffect(() => {
     const isOnLoginPage = location.pathname.includes('login');
     const isOnRegisterPage = location.pathname.includes('register');
+    const isOnForgotPage = location.pathname.includes('forgot');
 
-    setShouldShowNavigationBar(!isOnLoginPage && !isOnRegisterPage);
+    setShouldShowNavigationBar(!isOnLoginPage && !isOnRegisterPage && !isOnForgotPage);
   }, [location.pathname]);
 
 
