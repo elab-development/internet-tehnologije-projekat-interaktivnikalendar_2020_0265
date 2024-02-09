@@ -109,6 +109,9 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
   const handleColorSelect = (color) => {
     setSelectedColor(color);
   };
+  const latitude = 40.7128; // Latitude of New York City
+const longitude = -74.0060; // Longitude of New York City
+const date = '2024-02-10'; // Date for which you want to retrieve weather forecast data
 
   useEffect(() => {
     if(eventDetails != null){
@@ -161,7 +164,32 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
           console.log(e);
         });
     }
+
   });
+
+  async function getWeatherForecastForDate(latitude, longitude, date) {
+    try {
+      let key = '2c863b40e5ac50b49d0e72931f74f81d';
+      // Make a request to the OpenWeatherMap API
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&exclude=current,minutely,hourly,alerts&appid=${key}}`
+      );
+  
+      // Extract the forecast data
+      const forecastData = response.data.daily;
+  
+      // Find the forecast for the specific date
+      const desiredForecast = forecastData.find(forecast => {
+        const forecastDate = new Date(forecast.dt * 1000);
+        return forecastDate.toISOString().split('T')[0] === date;
+      });
+  
+      // Print the forecast data for the specific date
+      console.log(desiredForecast);
+    } catch (error) {
+      console.error('Error fetching weather forecast data:', error.message);
+    }
+  }
 
   const handleAddNotification = () => {
     setShowNotification(true);
@@ -179,7 +207,7 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
         slug: notification.slug, hoursBefore: notification.hoursBefore, event_id: eventID
       }).then((res)=>{console.log(res.data);
         setUpdatedNotification({
-          id: res.data.id,
+          id: res.data[1].id,
           title: notification.title, 
           description: notification.description,
           slug: notification.slug, 
@@ -233,8 +261,8 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
         <div>Name: {eventDetails.name}</div>
         <div>Slug: {eventDetails.slug}</div>
         <div>Category: {(eventDetails.category != null) ? eventDetails.category.name : 'none'}</div>
-        <div>Start Date: {`${eventDetails.startDate.getDate()}-${eventDetails.startDate.getMonth() + 1}-${eventDetails.startDate.getFullYear()}`}</div>
-        <div>End Date: {`${eventDetails.endDate.getDate()}-${eventDetails.endDate.getMonth() + 1}-${eventDetails.endDate.getFullYear()}`}</div>
+        <div>Start Date: {`${eventDetails.startDate.getDate()}-${eventDetails.startDate.getMonth() + 1}-${eventDetails.startDate.getFullYear()} ${eventDetails.startDate.getHours()}:${eventDetails.startDate.getMinutes()}:${eventDetails.startDate.getSeconds()}`}</div>
+        <div>End Date: {`${eventDetails.endDate.getDate()}-${eventDetails.endDate.getMonth() + 1}-${eventDetails.endDate.getFullYear()} ${eventDetails.endDate.getHours()}:${eventDetails.endDate.getMinutes()}:${eventDetails.endDate.getSeconds()}`}</div>
         <div>Colour: 
         <button
           className="color-button"

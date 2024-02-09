@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from './Button';
 import ChangeInfoModal from './ChangeInfoModal';
 import Event from './Event';
+import axios from 'axios';
+
 const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories }) => {
   const [isChangeInfoModalVisible, setChangeInfoModalVisible] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isChangePasswordMode, setChangePasswordMode] = useState(false); // Add this line
+  const [eventCategory, setEventCategory] = useState();
 
   console.log('Events in Profile:', events);
 
@@ -14,6 +17,29 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
     email: currentUser.email,
     photoUrl: 'https://placekitten.com/100/100',
   });
+
+
+  const axiosInstance = axios.create({
+    headers: {
+      'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+    }
+  });
+
+  useEffect(() => {
+    axiosInstance.get(`api/users/${window.sessionStorage.getItem("user_id")}`).then((res) => {
+      updateCurrentUser({
+        username: res.data.username,
+        email: res.data.email
+      });
+      setUser({
+        username: res.data.username,
+        email: res.data.email,
+        photoUrl: 'https://placekitten.com/100/100'
+      });
+    }).catch((e)=>{
+        console.log(e);
+      });
+  },[])
 
   const handleEventClick = (eventDetails) => {
     setSelectedEventDetails(eventDetails);
@@ -84,6 +110,13 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
     console.log('After handleChangePasswordModal:', isChangePasswordMode);
   };
 
+  const handleCategoryChange = (event) => {
+    setEventCategory(event.target.value);
+    axiosInstance.get(`api/categories/${event.target.value}/events`).then((res) => {
+      console.log(res.data);
+    });
+  };
+
   return (
     <div className="profile-container">
       <div className="user-details">
@@ -117,6 +150,7 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
       </div>
 
       <div className="upcoming-events">
+      
         <h3>Upcoming Events</h3>
         {Object.keys(events).length > 0 ? (
           <ul style={{ listStyle: 'none', padding: '0' }}>
@@ -125,7 +159,7 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
                 key={key}
                 style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
               >
-                {console.log(eventList)}
+                {console.log(eventList[0])}
                 {eventList.map((event, index) => (
                   <div key={index} onClick={() => handleEventClick(event)}>                    <strong>{event.name}</strong> ({(event.category != null) ? event.category.name : 'none'}):{' '}
                     {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`}{' '}

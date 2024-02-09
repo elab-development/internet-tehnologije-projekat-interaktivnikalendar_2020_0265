@@ -91,6 +91,15 @@ class RoleController extends Controller
             )
         );
     }
+
+    public function showRole($user_id)
+    {
+        $user = User::find($user_id);
+        $role_id = DB::table("model_has_roles")->where('model_id',$user_id)->value("role_id");
+        if(is_null($user))
+            return response()->json('Data not found', 404);
+        return response()->json(Role::find($role_id));
+    }
     
     /**
      * Update the specified resource in storage.
@@ -129,6 +138,16 @@ class RoleController extends Controller
         ]);
         (User::get()->firstWhere('username', $request->username))->assignRole($request->role);
         return response()->json('Role assigned successfully!');
+    }
+    public function replaceRole(Request $request){
+        $request->validate([
+            'user_id' => 'required',
+            'role_id' => 'required',
+        ]);
+        
+        DB::table("model_has_roles")->where('model_id', $request->user_id)->update(['role_id' => $request->role_id]);
+
+        return response()->json('Role changed successfully!');
     }
     public function removePermission(Request $request)
     {

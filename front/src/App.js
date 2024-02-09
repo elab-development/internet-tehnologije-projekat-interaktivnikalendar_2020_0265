@@ -9,6 +9,7 @@ import Event from './components/Event';
 import Profile from './components/Profile';
 import ForgotPassword from './components/ForgotPassword';
 import React, { useState } from 'react';
+import ControlPanel from './components/ControlPanel';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/profile" element={<Profile events={events} setEvents={setEvents} currentUser={currentUser} updateCurrentUser={updateCurrentUser} categories={categories} />}/>
+          <Route path="/control-panel" element={<ControlPanel categories={categories} updateCategories={updateCategories} />} />
           <Route path="/" element={<Navigate to="/login" />} />
  </Routes>
     </BrowserRouter>

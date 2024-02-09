@@ -31,7 +31,16 @@ const Login = ({addToken, updateCurrentUser}) => {
       });
         axiosInstance.get(`api/users/${res.data.user_id}`).then((res) => {
           updateCurrentUser({username: res.data.username, email: res.data.email});
+
+          
+          axiosInstance.get(`api/users/${window.sessionStorage.getItem("user_id")}/role`).then((res) => {
+            console.log(res.data.name);
+            if(res.data.name)
+            window.sessionStorage.setItem("role", res.data.name);
+        })
         });
+
+
       navigate('/calendar');
     }
     }).catch((e)=>{

@@ -15,6 +15,9 @@ const Navigacija = () => {
     const isOnForgotPage = location.pathname.includes('forgot');
 
     setShouldShowNavigationBar(!isOnLoginPage && !isOnRegisterPage && !isOnForgotPage);
+
+    
+
   }, [location.pathname]);
 
 
@@ -38,6 +41,8 @@ const Navigacija = () => {
         console.log(JSON.stringify(response.data));
         window.sessionStorage.setItem("auth_token", null);
         window.sessionStorage.setItem("user_id", null);
+        window.sessionStorage.setItem("role", null);
+        window.sessionStorage.clear();
         navigate('/login');
       })
       .catch((error) => {
@@ -74,6 +79,12 @@ const Navigacija = () => {
                   <Link className="nav-link" to="/profile">
                     Profil
                   </Link>
+                  {(window.sessionStorage.getItem("role")
+                   ) && (
+                  <Link className="nav-link" to="/control-panel">
+                    Control Panel
+                  </Link>
+                  )}
                   <a className="nav-link" href="#" onClick={handleLogout}>
                     LogOut
                   </a>
