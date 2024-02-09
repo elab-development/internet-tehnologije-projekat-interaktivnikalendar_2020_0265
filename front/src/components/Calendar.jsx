@@ -74,7 +74,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
       })
     }
     
-  });
+  }, []);
 
   const daysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
@@ -233,8 +233,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
       const updatedEvents = { ...events };
       const currentDate = new Date(date.getFullYear(), date.getMonth(), event.startDate.day);
       const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${event.startDate.day}`;
-      console.log(event.sd);
-      console.log(event.ed);
+      console.log(event.color);
       axiosInstance.put(`api/events/${event.id}`, {name: event.name,
         slug: event.slug, start: `${event.sd.split('-')[0]}-${event.sd.split('-')[1]}-${event.sd.split('-')[2]} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
         end: `${event.ed.split('-')[0]}-${event.ed.split('-')[1]}-${event.ed.split('-')[2]} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category, color: event.color
@@ -244,11 +243,11 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
             name: event.name,
             slug: event.slug,
             category: event.category,
-            startDate: new Date(parseInt(event.sd.split('-')[0], 10), parseInt(event.sd.split('-')[1], 10), parseInt(event.sd.split('-')[2], 10), event.startDate.hour, event.startDate.minute, event.startDate.second),
-            endDate: new Date(parseInt(event.ed.split('-')[0], 10), parseInt(event.ed.split('-')[1], 10), parseInt(event.ed.split('-')[2], 10), event.endDate.hour, event.endDate.minute, event.endDate.second),
+            startDate: new Date(parseInt(event.sd.split('-')[0], 10), parseInt(event.sd.split('-')[1], 10)-1, parseInt(event.sd.split('-')[2], 10), event.startDate.hour, event.startDate.minute, event.startDate.second),
+            endDate: new Date(parseInt(event.ed.split('-')[0], 10), parseInt(event.ed.split('-')[1], 10)-1, parseInt(event.ed.split('-')[2], 10), event.endDate.hour, event.endDate.minute, event.endDate.second),
             color: event.color
           }];
-        console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
+        console.log(updatedEvents[key]);
         
   
         console.log('Updated Events:', updatedEvents);
@@ -286,7 +285,16 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
      
       //onDeleteEvent(eventToDelete);
       setSelectedEventDetails(null);
+      let id = 0;
+      axiosInstance.get(`api/events/${eventToDelete.id}/notifications/1`).then((res) => {console.log(res.data); id = res.data.id
+        if(id != 0)
+        axiosInstance.delete(`api/notifications/${id}`).then((res) => {console.log(res.data)});
+      }).catch((e)=>{
+        console.log(e);
+      });
+      
       axiosInstance.delete(`api/events/${eventToDelete.id}`).then((res) => {console.log(res.data)});
+      
     }
   
     console.log("Posle brisanja:", events);

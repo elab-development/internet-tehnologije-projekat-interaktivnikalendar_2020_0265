@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const EventColorPicker = ({ selectedColor, onSelectColor }) => {
-  const colors = ['#d44b4bea', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3', '#ff1493', '#dbdbdb', '#303030'];
+  const colors = ['#d44b4bea', '#ff7f00', '#e3e300', '#00ff00', '#0000ff', '#4b0082', '#9400d3', '#ff1493', '#dbdbdb', '#303030'];
 
   return (
     <div className="color-picker">

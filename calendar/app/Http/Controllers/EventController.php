@@ -55,6 +55,8 @@ public function update(Request $request, Event $event)
     $event->start = $request->start;
     $event->end = $request->end;
     $event->category_id = $request->category_id;
+    if($request->color != null)
+        $event->color = $request->color;
 
     $event->save();
 

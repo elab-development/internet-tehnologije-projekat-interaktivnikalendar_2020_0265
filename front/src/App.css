@@ -391,3 +391,16 @@ button:hover {
 .color-button.selected {
   border: 2px solid black;
 }
+
+.notification-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; 
+  background-color: rgb(234, 234, 234); 
+  padding: 20px; 
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}

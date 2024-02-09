@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EventColorPicker from './EventColorPicker';
+import Notification from './Notification';
+import axios from 'axios';
 
 const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories, prof}) => {
   const [eventID, setEventID] = useState(0);
@@ -18,6 +20,15 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
   const [sDate, setSDate] = useState(null);
   const [ed, setED] = useState(null);
   const [eDate, setEDate] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [updatedNotification, setUpdatedNotification] = useState(null);
+  const [no, setNo] = useState(false);
+
+  const axiosInstance = axios.create({
+    headers: {
+      'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+    }
+  });
 
   const handleAddEvent = () => {
     if (eventName.trim() !== '' && startDate && endDate) {
@@ -99,9 +110,6 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
     setSelectedColor(color);
   };
 
-  const handleCategory = (category) => {
-    setCategory(category);
-  };
   useEffect(() => {
     if(eventDetails != null){
     if(eventID == 0)
@@ -137,9 +145,84 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
       setEDate(eventDetails.endDate);
     }
     }
-
+    if(!updatedNotification && eventID != 0 && !no){
+        setNo(true);
+      axiosInstance.get(`api/events/${eventID}/notifications/1`).then((res) => {
+        console.log(res.data);
+        setUpdatedNotification({
+          id: res.data.id,
+          title: res.data.title, 
+          description: res.data.description,
+          slug: res.data.slug, 
+          hoursBefore: res.data.hoursBefore,
+          event_id: res.data.event_id.id
+        });
+      }).catch((e)=>{
+          console.log(e);
+        });
+    }
   });
+
+  const handleAddNotification = () => {
+    setShowNotification(true);
+  };
   
+  const handleCloseNotification = (notification) => {
+    setShowNotification(false);
+
+    if(notification){
+      if(isNaN(notification.hoursBefore)){
+      alert("Hours before must be numeric!");}
+      else{
+    if (!updatedNotification) {
+      axiosInstance.post("api/notifications", {title: notification.title, description: notification.description,
+        slug: notification.slug, hoursBefore: notification.hoursBefore, event_id: eventID
+      }).then((res)=>{console.log(res.data);
+        setUpdatedNotification({
+          id: res.data.id,
+          title: notification.title, 
+          description: notification.description,
+          slug: notification.slug, 
+          hoursBefore: notification.hoursBefore,
+          event_id: eventID
+        });
+  
+        console.log('Updated Notification:', updatedNotification);
+        }).catch((e)=>{
+          console.log(e);
+        });
+    }
+    else
+    {
+      axiosInstance.put(`api/notifications/${updatedNotification.id}`, {title: notification.title, description: notification.description,
+        slug: notification.slug, hoursBefore: notification.hoursBefore, event_id: eventID
+      }).then((res)=>{console.log(res.data);
+        setUpdatedNotification({
+          id: updatedNotification.id,
+          title: notification.title, 
+          description: notification.description,
+          slug: notification.slug, 
+          hoursBefore: notification.hoursBefore,
+          event_id: eventID
+        });
+  
+        console.log('Updated Notification:', updatedNotification);
+        }).catch((e)=>{
+          console.log(e);
+        });
+    }
+  }
+  }
+  }
+
+  const handleNotificationDelete = (notificationToDelete) => {
+    if (notificationToDelete) {
+      setUpdatedNotification(null);
+      axiosInstance.delete(`api/notifications/${notificationToDelete.id}`).then((res) => {console.log(res.data)});
+    }
+  }
+  
+
   return (
     <div className="event-modal">
       {prof ? (
@@ -158,10 +241,11 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
           style={{ backgroundColor: selectedColor, border: '3px solid black'}}
         ></button>
         </div>
+        {updatedNotification && (<div><div>Notification title: {updatedNotification.title}
+          </div><div>Notification description: {updatedNotification.description}
+          </div><div>Hours before: {updatedNotification.hoursBefore}
+          </div></div>)}
       </div>
-      <button className="event-btn" onClick={handleDelete}>
-        Delete Event
-      </button>
       <button className="event-btn" onClick={handleClose}>
         Close
       </button>
@@ -283,10 +367,28 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
             ))}
           </select>
           <EventColorPicker selectedColor={selectedColor} onSelectColor={handleColorSelect} />
+          {updatedNotification && (<div>Notification title: <input
+                type="text"
+                className="event-input"
+                value={updatedNotification.title}
+                readOnly = {true}
+              /></div>)}
           <div className="event-buttons">
           <button className="event-btn" onClick={handleDelete}>
             Delete Event
           </button>
+            {!updatedNotification && (<button className="event-btn" onClick={handleAddNotification}>
+            Add notification
+          </button>)}
+          {updatedNotification && (<button className="event-btn" onClick={handleAddNotification}>
+            Edit notification
+          </button>)}
+          
+          {showNotification && (<div className="notification-container">
+          <Notification onClose={handleCloseNotification} event_id={eventID} notification={updatedNotification} onDelete={handleNotificationDelete}/>
+        </div>)}
+        
+         {}
             <button className="event-btn" onClick={handleEditEvent}>
               Save changes
             </button>
