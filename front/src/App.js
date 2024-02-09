@@ -46,7 +46,7 @@ function App() {
           <Route path="/login" element={<Login addToken={addToken} updateCurrentUser = {updateCurrentUser}/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/profile" element={<Profile events={events} setEvents={setEvents} currentUser={currentUser} />}/>
+          <Route path="/profile" element={<Profile events={events} setEvents={setEvents} currentUser={currentUser} updateCurrentUser={updateCurrentUser} categories={categories} />}/>
           <Route path="/" element={<Navigate to="/login" />} />
  </Routes>
     </BrowserRouter>

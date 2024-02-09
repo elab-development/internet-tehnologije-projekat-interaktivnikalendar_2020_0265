@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::delete('/users/{id}', [UserController::class, 'delete']);
+    Route::put('/users', [UserController::class, 'update']);
 
     Route::resource('events', EventController::class);
 

@@ -15,37 +15,52 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
 
+  const axiosInstance = axios.create({
+    headers: {
+      'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+    }
+  });
   useEffect(()=>{
-    const axiosInstance = axios.create({
-      headers: {
-        'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
-      }
-    });
 
-    if(events == null){
+    if (events == null) {
       axiosInstance.get("api/events").then((res) => {
         console.log(res.data);
         const updatedEvents = { ...events };
+    
         res.data.events.forEach(event => {
-          if(event.user != null && event.user.id == window.sessionStorage.getItem("user_id")){
-      const eventDate = new Date(event.start);
-      const key = `${eventDate.getMonth() + 1}-${eventDate.getFullYear()}-${eventDate.getDate()}`;
-     
-        updatedEvents[key] = [{
-          name: event.name,
-          slug: event.slug,
-          category: event.category,
-          startDate: new Date(event.start),
-          endDate: new Date(event.end),
-          category: event.category,
-          color: event.color
-        }];
-  
+          if (event.user != null && event.user.id == window.sessionStorage.getItem("user_id")) {
+            const eventDate = new Date(event.start);
+            const key = `${eventDate.getMonth() + 1}-${eventDate.getFullYear()}-${eventDate.getDate()}`;
+            
+            if (updatedEvents[key]) {
+              // ako ima bar jedan event na danu
+              updatedEvents[key].push({
+                id: event.id,
+                name: event.name,
+                slug: event.slug,
+                startDate: new Date(event.start),
+                endDate: new Date(event.end),
+                category: event.category,
+                color: event.color
+              });
+            } else {
+              // ako je dan prazan
+              updatedEvents[key] = [{
+                id: event.id,
+                name: event.name,
+                slug: event.slug,
+                startDate: new Date(event.start),
+                endDate: new Date(event.end),
+                category: event.category,
+                color: event.color
+              }];
+            }
           }
         });
+    
         console.log('Updated Events:', updatedEvents);
         updateEvents(updatedEvents);
-      })
+      });
     }
     if(categories == null){
       axiosInstance.get("api/categories").then((res) => {
@@ -171,60 +186,83 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
 
   const handleCloseEvent = (event) => {
     setIsEventVisible(false);
-  
+
     if (event && startDay && endDay) {
       const updatedEvents = { ...events };
       const currentDate = new Date(date.getFullYear(), date.getMonth(), startDay);
       const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${startDay}`;
-  
-     
-      if (updatedEvents[key]) {
-        
-        updatedEvents[key].push({
-          name: event.name,
-          slug: event.slug,
-          category: event.category,
-          startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
-          endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
-          color: event.color
-        });
-      } else {
-          // >:(
-        updatedEvents[key] = [{
-          name: event.name,
-          slug: event.slug,
-          category: event.category,
-          startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day),
-          endDate: new Date(date.getFullYear(), date.getMonth(), endDay),
-          color: event.color
-        }];
-      }
-
-      const axiosInstance = axios.create({
-        headers: {
-          'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
-        }
-      });
       
-      const headers = {
-        'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token")
-      };
-      console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
       axiosInstance.post("api/events", {name: event.name,
         slug: event.slug, start: `${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
-        end: `${event.endDate.year}-${event.endDate.month}-${event.endDate.day}`, category_id: event.category, color: event.color
+        end: `${event.endDate.year}-${event.endDate.month}-${event.endDate.day} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category, color: event.color
       }).then((res)=>{console.log(res.data);
+        if (updatedEvents[key]) {
+          updatedEvents[key].push({
+            id: res.data[1].id,
+            name: event.name,
+            slug: event.slug,
+            category: event.category,
+            startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day, event.startDate.hour, event.startDate.minute, event.startDate.second),
+            endDate: new Date(date.getFullYear(), date.getMonth(), endDay, event.endDate.hour, event.endDate.minute, event.endDate.second),
+            color: event.color
+          });
+        } else {
+            // >:(
+          updatedEvents[key] = [{
+            id: res.data[1].id,
+            name: event.name,
+            slug: event.slug,
+            category: event.category,
+            startDate: new Date(event.startDate.year, event.startDate.month - 1, event.startDate.day, event.startDate.hour, event.startDate.minute, event.startDate.second),
+            endDate: new Date(date.getFullYear(), date.getMonth(), endDay, event.endDate.hour, event.endDate.minute, event.endDate.second),
+            color: event.color
+          }];
+        }
+        console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
+        
+  
+        console.log('Updated Events:', updatedEvents);
+        updateEvents(updatedEvents);
         }).catch((e)=>{
           console.log(e);
+          alert("Category field is required!");
         });
-
-      console.log('Updated Events:', updatedEvents);
-      updateEvents(updatedEvents);
+    }
+    else if(event)
+    {
+      const updatedEvents = { ...events };
+      const currentDate = new Date(date.getFullYear(), date.getMonth(), event.startDate.day);
+      const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${event.startDate.day}`;
+      console.log(event.sd);
+      console.log(event.ed);
+      axiosInstance.put(`api/events/${event.id}`, {name: event.name,
+        slug: event.slug, start: `${event.sd.split('-')[0]}-${event.sd.split('-')[1]}-${event.sd.split('-')[2]} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
+        end: `${event.ed.split('-')[0]}-${event.ed.split('-')[1]}-${event.ed.split('-')[2]} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category, color: event.color
+      }).then((res)=>{console.log(res.data);
+          updatedEvents[key] = [{
+            id: event.id,
+            name: event.name,
+            slug: event.slug,
+            category: event.category,
+            startDate: new Date(parseInt(event.sd.split('-')[0], 10), parseInt(event.sd.split('-')[1], 10), parseInt(event.sd.split('-')[2], 10), event.startDate.hour, event.startDate.minute, event.startDate.second),
+            endDate: new Date(parseInt(event.ed.split('-')[0], 10), parseInt(event.ed.split('-')[1], 10), parseInt(event.ed.split('-')[2], 10), event.endDate.hour, event.endDate.minute, event.endDate.second),
+            color: event.color
+          }];
+        console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
+        
+  
+        console.log('Updated Events:', updatedEvents);
+        updateEvents(updatedEvents);
+        }).catch((e)=>{
+          console.log(e);
+          alert("Category field is required!");
+        });
     }
   
     setClickCount(0);
     setStartDay(null);
     setEndDay(null);
+    setSelectedEventDetails(null);
     console.log(events);
   };
   
@@ -248,6 +286,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
      
       //onDeleteEvent(eventToDelete);
       setSelectedEventDetails(null);
+      axiosInstance.delete(`api/events/${eventToDelete.id}`).then((res) => {console.log(res.data)});
     }
   
     console.log("Posle brisanja:", events);
@@ -309,9 +348,10 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
         )}
  {selectedEventDetails && (
         <Event
-          onClose={() => setSelectedEventDetails(null)}
+          onClose={handleCloseEvent}
           eventDetails={selectedEventDetails}
           onDelete={handleEventDelete}
+          categories={categories}
         />
       )}
 

@@ -7,6 +7,8 @@ use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -64,7 +66,17 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'email'=>'required|string|max:255',
+            'username'=>'required|string|max:100'
+        ]);
+    
+        if($validator->fails())
+        return response()->json($validator->errors());
+    
+        User::where('id', Auth::user()->id)->first()->update(['email' => $request->email, 'username' => $request->username]);
+    
+        return response()->json(['User is updated successfully.']);
     }
 
     /**

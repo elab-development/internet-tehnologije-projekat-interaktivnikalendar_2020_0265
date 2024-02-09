@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const ChangeInfoModal = ({ onClose, onChange, isChangePasswordMode, onChangePassword }) => {
+const ChangeInfoModal = ({ onClose, onChange, isChangePasswordMode, onChangePassword, updateCurrentUser }) => {
   const [newUsername, setNewUsername] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -19,6 +20,19 @@ const ChangeInfoModal = ({ onClose, onChange, isChangePasswordMode, onChangePass
       }
     } else {
       onChange(newUsername, newEmail);
+      const axiosInstance = axios.create({
+        headers: {
+          'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+        }
+      });
+      console.log(newEmail + ' ' + newUsername);
+      const data = {
+        email: newEmail,
+        username: newUsername
+      };
+      axiosInstance.put("api/users", data).then((res)=>{console.log(res.data);
+        updateCurrentUser(data);
+      });
       onClose();
     }
   };

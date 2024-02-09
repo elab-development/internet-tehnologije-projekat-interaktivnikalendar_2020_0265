@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from './Button';
 import ChangeInfoModal from './ChangeInfoModal';
 import Event from './Event';
-const Profile = ({ events, setEvents, currentUser }) => {
+const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories }) => {
   const [isChangeInfoModalVisible, setChangeInfoModalVisible] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isChangePasswordMode, setChangePasswordMode] = useState(false); // Add this line
@@ -94,14 +94,14 @@ const Profile = ({ events, setEvents, currentUser }) => {
           <h2>{user.username}</h2>
           <p>{user.email}</p>
         </div>
-        <div className="change-password-btn">
-          <Button onClick={() => handleChangePasswordModal()} className="custom-button">
-            Change Password
-          </Button>
-        </div>
         <div className="change-info-btn">
           <Button onClick={() => handleOpenChangeInfoModal()} className="small-button">
             Change Username/Email
+          </Button>
+        </div>
+        <div className="change-password-btn">
+          <Button onClick={() => handleChangePasswordModal()} className="custom-button">
+            Change Password
           </Button>
         </div>
 
@@ -111,6 +111,7 @@ const Profile = ({ events, setEvents, currentUser }) => {
             onChange={handleChangeInfo}
             isChangePasswordMode={isChangePasswordMode}
             onChangePassword={handleChangePassword}
+            updateCurrentUser={updateCurrentUser}
           />
         )}
       </div>
@@ -144,6 +145,8 @@ const Profile = ({ events, setEvents, currentUser }) => {
           onClose={handleCloseEventDetails}
           eventDetails={selectedEventDetails}
           onDelete={handleEventDelete}
+          categories={categories}
+          prof={true}
         />
       )}
     </div>
