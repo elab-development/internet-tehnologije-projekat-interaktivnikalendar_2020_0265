@@ -23,6 +23,7 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
   const [showNotification, setShowNotification] = useState(false);
   const [updatedNotification, setUpdatedNotification] = useState(null);
   const [no, setNo] = useState(false);
+  const [forecastData, setForecastData] = useState(null);
 
   const axiosInstance = axios.create({
     headers: {
@@ -109,9 +110,8 @@ const Event = ({ onClose, startDate, endDate, eventDetails, onDelete, categories
   const handleColorSelect = (color) => {
     setSelectedColor(color);
   };
-  const latitude = 40.7128; // Latitude of New York City
-const longitude = -74.0060; // Longitude of New York City
-const date = '2024-02-10'; // Date for which you want to retrieve weather forecast data
+  const latitude = 44.1238; 
+const longitude = -20.5520; 
 
   useEffect(() => {
     if(eventDetails != null){
@@ -148,6 +148,15 @@ const date = '2024-02-10'; // Date for which you want to retrieve weather foreca
       setEDate(eventDetails.endDate);
     }
     }
+    else{
+      const month = `${startDate.month}`;
+      let date =`${startDate.year}-${startDate.month}-${startDate.day}`;
+      if(month.length == 1)
+      date = `${startDate.year}-0${startDate.month}-${startDate.day}`;
+  
+      console.log(date);
+      getWeatherForecastForDate(latitude, longitude, date);
+    }
     if(!updatedNotification && eventID != 0 && !no){
         setNo(true);
       axiosInstance.get(`api/events/${eventID}/notifications/1`).then((res) => {
@@ -164,19 +173,18 @@ const date = '2024-02-10'; // Date for which you want to retrieve weather foreca
           console.log(e);
         });
     }
-
-  });
+  }, []);
 
   async function getWeatherForecastForDate(latitude, longitude, date) {
     try {
       let key = '2c863b40e5ac50b49d0e72931f74f81d';
       // Make a request to the OpenWeatherMap API
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&exclude=current,minutely,hourly,alerts&appid=${key}}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=2c863b40e5ac50b49d0e72931f74f81d`
       );
   
       // Extract the forecast data
-      const forecastData = response.data.daily;
+      const forecastData = response.data.list;
   
       // Find the forecast for the specific date
       const desiredForecast = forecastData.find(forecast => {
@@ -186,6 +194,7 @@ const date = '2024-02-10'; // Date for which you want to retrieve weather foreca
   
       // Print the forecast data for the specific date
       console.log(desiredForecast);
+      setForecastData(desiredForecast);
     } catch (error) {
       console.error('Error fetching weather forecast data:', error.message);
     }
@@ -534,6 +543,15 @@ const date = '2024-02-10'; // Date for which you want to retrieve weather foreca
               Close
             </button>
           </div>
+          {forecastData && (
+            <div>
+              <h4>Weather data:</h4>
+              <p>Temperature: {forecastData.main.temp}°C</p>
+              <p>Feels like: {forecastData.main.feels_like}°C</p>
+              <p>Humidity: {forecastData.main.humidity}%</p>
+              <p>Pressure: {forecastData.main.pressure}mb</p>
+              </div>
+          )}
         </div>
       )}
     </div>

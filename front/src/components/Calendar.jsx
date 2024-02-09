@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Event from './Event';
 import Button from './Button';
 import axios from 'axios';
-import Weather from './Weather';
 
 const Calendar = ({ events, updateEvents, currentUser, categories, updateCategories }) => {
 
