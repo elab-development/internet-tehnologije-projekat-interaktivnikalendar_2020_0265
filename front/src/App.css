@@ -49,6 +49,12 @@
   margin: 0 5%;
 }
 
+.small-button-sort {
+  background-color: #d21f1f;
+  font-size: 18px; 
+  padding: 10px 10px; 
+}
+
 .custom-button button:hover {
   background-color: #b33f3f;
 }
@@ -240,7 +246,8 @@ button:hover {
 
 .profile-container {
   display: flex;
-  max-width: 800px;
+  min-width: 700px;
+  width: 53%;
   margin: auto;
   background-color: #faf0f0;
   border-radius: 10px;

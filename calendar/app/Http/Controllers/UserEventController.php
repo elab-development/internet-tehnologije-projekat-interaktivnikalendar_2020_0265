@@ -11,9 +11,7 @@ class UserEventController extends Controller
     public function index($user_id)
     {
         $events = new EventCollection(Event::get()->where('user_id', $user_id));
-        if(count($events)==0)
-        return response()->json('Data not found', 404);
-    return response()->json($events);
+    return new EventCollection($events);;
     }
 
     public function show($user_id, $event_id)
@@ -30,6 +28,6 @@ class UserEventController extends Controller
             $event = null;
         if(is_null($event))
         return response()->json('Data not found', 404);
-    return response()->json($event);
+    return new EventResource($event);
     }
 }

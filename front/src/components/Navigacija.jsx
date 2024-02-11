@@ -1,12 +1,12 @@
 import React from 'react';
-import { useState,  useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-import { Link, useNavigate,useLocation, } from 'react-router-dom';
+import { Link, useNavigate, useLocation, } from 'react-router-dom';
 import axios from 'axios';
 
 const Navigacija = () => {
 
-    const location = useLocation();
+  const location = useLocation();
   const [shouldShowNavigationBar, setShouldShowNavigationBar] = useState(true);
 
   useEffect(() => {
@@ -15,9 +15,6 @@ const Navigacija = () => {
     const isOnForgotPage = location.pathname.includes('forgot');
 
     setShouldShowNavigationBar(!isOnLoginPage && !isOnRegisterPage && !isOnForgotPage);
-
-    
-
   }, [location.pathname]);
 
 
@@ -31,23 +28,23 @@ const Navigacija = () => {
         method: 'post',
         maxBodyLength: Infinity,
         url: 'api/logout',
-        headers: { 
-          'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+        headers: {
+          'Authorization': 'Bearer ' + window.sessionStorage.getItem("auth_token"),
         },
       };
-      
       axios(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        window.sessionStorage.setItem("auth_token", null);
-        window.sessionStorage.setItem("user_id", null);
-        window.sessionStorage.setItem("role", null);
-        window.sessionStorage.clear();
-        navigate('/login');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          window.sessionStorage.setItem("auth_token", null);
+          window.sessionStorage.setItem("user_id", null);
+          window.sessionStorage.setItem("role", null);
+          window.sessionStorage.clear();
+          navigate('/login');
+          window.location.reload(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -80,11 +77,11 @@ const Navigacija = () => {
                     Profil
                   </Link>
                   {(window.sessionStorage.getItem("role")
-                   ) && (
-                  <Link className="nav-link" to="/control-panel">
-                    Control Panel
-                  </Link>
-                  )}
+                  ) && (
+                      <Link className="nav-link" to="/control-panel">
+                        Control Panel
+                      </Link>
+                    )}
                   <a className="nav-link" href="#" onClick={handleLogout}>
                     LogOut
                   </a>

@@ -17,21 +17,22 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
 
   const axiosInstance = axios.create({
     headers: {
-      'Authorization': 'Bearer '+ window.sessionStorage.getItem("auth_token"),
+      'Authorization': 'Bearer ' + window.sessionStorage.getItem("auth_token"),
     }
   });
-  useEffect(()=>{
-
+  
+  useEffect(() => {
+    
     if (events == null) {
-      axiosInstance.get("api/events").then((res) => {
+      axiosInstance.get(`api/users/${window.sessionStorage.getItem("user_id")}/events`).then((res) => {
         console.log(res.data);
         const updatedEvents = { ...events };
-    
+
         res.data.events.forEach(event => {
-          if (event.user != null && event.user.id == window.sessionStorage.getItem("user_id")) {
+          
             const eventDate = new Date(event.start);
             const key = `${eventDate.getMonth() + 1}-${eventDate.getFullYear()}-${eventDate.getDate()}`;
-            
+
             if (updatedEvents[key]) {
               // ako ima bar jedan event na danu
               updatedEvents[key].push({
@@ -55,22 +56,21 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
                 color: event.color
               }];
             }
-          }
         });
-    
+
         console.log('Updated Events:', updatedEvents);
         updateEvents(updatedEvents);
       });
     }
-    if(categories == null){
+    if (categories == null) {
       axiosInstance.get("api/categories").then((res) => {
         const updatedCategories = res.data.categories.map(category => ({
           id: category.id,
           name: category.name
         }));
 
-      console.log('Updated Categories:', updatedCategories);
-      updateCategories(updatedCategories);
+        console.log('Updated Categories:', updatedCategories);
+        updateCategories(updatedCategories);
       })
     }
   }, []);
@@ -85,7 +85,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
   };
 
   const handleEventClick = (event, e) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setSelectedEventDetails(event);
   };
 
@@ -110,7 +110,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
 
           const key = `${date.getMonth() + 1}-${date.getFullYear()}-${currentDay}`;
           const dayEvents = events && events[key] ? events[key] : [];
-    
+
           week.push(
             <td
               key={dayCounter}
@@ -123,42 +123,42 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
                 verticalAlign: 'top',
               }}
             >
-               <div>
-               {dayCounter}
-          </div>
-          {dayEvents.length > 0 && (
-    <div className="event-container">
-      {dayEvents.map((event, index) => (
-        <div
-          key={index}
-          className="event-card"
-          onClick={(e) => handleEventClick(event, e)}
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: `${index * 28}px`,
-            marginBottom: '5px',
-            backgroundColor: `${event.color}`
-          }}
-        >
-          {event.name}
+              <div>
+                {dayCounter}
+              </div>
+              {dayEvents.length > 0 && (
+                <div className="event-container">
+                  {dayEvents.map((event, index) => (
+                    <div
+                      key={index}
+                      className="event-card"
+                      onClick={(e) => handleEventClick(event, e)}
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: `${index * 28}px`,
+                        marginBottom: '5px',
+                        backgroundColor: `${event.color}`
+                      }}
+                    >
+                      {event.name}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </td>
-      );
+              )}
+            </td>
+          );
 
-      dayCounter++;
+          dayCounter++;
         } else {
           week.push(<td key={`empty-${j}`}></td>);
         }
       }
-  
+
       calendar.push(<tr key={`week-${i}`}>{week}</tr>);
     }
-  
+
     return calendar;
   };
 
@@ -190,11 +190,13 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
       const updatedEvents = { ...events };
       const currentDate = new Date(date.getFullYear(), date.getMonth(), startDay);
       const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${startDay}`;
-      
-      axiosInstance.post("api/events", {name: event.name,
-        slug: event.slug, start: `${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
-        end: `${event.endDate.year}-${event.endDate.month}-${event.endDate.day} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category, color: event.color
-      }).then((res)=>{console.log(res.data);
+
+        console.log(event.category);
+      axiosInstance.post("api/events", {
+        name: event.name,
+        slug: event.slug, start: `${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`,
+        end: `${event.endDate.year}-${event.endDate.month}-${event.endDate.day} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category.id, color: event.color
+      }).then((res) => {
         if (updatedEvents[key]) {
           updatedEvents[key].push({
             id: res.data[1].id,
@@ -206,7 +208,7 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
             color: event.color
           });
         } else {
-            // >:(
+          // >:(
           updatedEvents[key] = [{
             id: res.data[1].id,
             name: event.name,
@@ -218,88 +220,88 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
           }];
         }
         console.log(`${event.startDate.year}-${event.startDate.month}-${event.startDate.day} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`);
-        
-  
+
+
         console.log('Updated Events:', updatedEvents);
         updateEvents(updatedEvents);
-        }).catch((e)=>{
-          console.log(e);
-          alert("Category field is required!");
-        });
+      }).catch((e) => {
+        console.log(e);
+        alert("Category field is required!");
+      });
     }
-    else if(event)
-    {
+    else if (event) {
       const updatedEvents = { ...events };
       const currentDate = new Date(date.getFullYear(), date.getMonth(), event.startDate.day);
       const key = `${currentDate.getMonth() + 1}-${currentDate.getFullYear()}-${event.startDate.day}`;
       console.log(event.color);
-      axiosInstance.put(`api/events/${event.id}`, {name: event.name,
-        slug: event.slug, start: `${event.sd.split('-')[0]}-${event.sd.split('-')[1]}-${event.sd.split('-')[2]} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`, 
-        end: `${event.ed.split('-')[0]}-${event.ed.split('-')[1]}-${event.ed.split('-')[2]} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category, color: event.color
-      }).then((res)=>{console.log(res.data);
-          updatedEvents[key] = [{
-            id: event.id,
-            name: event.name,
-            slug: event.slug,
-            category: event.category,
-            startDate: new Date(parseInt(event.sd.split('-')[0], 10), parseInt(event.sd.split('-')[1], 10)-1, parseInt(event.sd.split('-')[2], 10), event.startDate.hour, event.startDate.minute, event.startDate.second),
-            endDate: new Date(parseInt(event.ed.split('-')[0], 10), parseInt(event.ed.split('-')[1], 10)-1, parseInt(event.ed.split('-')[2], 10), event.endDate.hour, event.endDate.minute, event.endDate.second),
-            color: event.color
-          }];
+      axiosInstance.put(`api/events/${event.id}`, {
+        name: event.name,
+        slug: event.slug, start: `${event.sd.split('-')[0]}-${event.sd.split('-')[1]}-${event.sd.split('-')[2]} ${event.startDate.hour}:${event.startDate.minute}:${event.startDate.second}`,
+        end: `${event.ed.split('-')[0]}-${event.ed.split('-')[1]}-${event.ed.split('-')[2]} ${event.endDate.hour}:${event.endDate.minute}:${event.endDate.second}`, category_id: event.category.id, color: event.color
+      }).then((res) => {
+        console.log(res.data);
+        updatedEvents[key] = [{
+          id: event.id,
+          name: event.name,
+          slug: event.slug,
+          category: event.category,
+          startDate: new Date(parseInt(event.sd.split('-')[0], 10), parseInt(event.sd.split('-')[1], 10) - 1, parseInt(event.sd.split('-')[2], 10), event.startDate.hour, event.startDate.minute, event.startDate.second),
+          endDate: new Date(parseInt(event.ed.split('-')[0], 10), parseInt(event.ed.split('-')[1], 10) - 1, parseInt(event.ed.split('-')[2], 10), event.endDate.hour, event.endDate.minute, event.endDate.second),
+          color: event.color
+        }];
         console.log(updatedEvents[key]);
-        
-  
+
+
         console.log('Updated Events:', updatedEvents);
         updateEvents(updatedEvents);
-        }).catch((e)=>{
-          console.log(e);
-          alert("Category field is required!");
-        });
+      }).catch((e) => {
+        console.log(e);
+        alert("Category field is required!");
+      });
     }
-  
+
     setClickCount(0);
     setStartDay(null);
     setEndDay(null);
     setSelectedEventDetails(null);
     console.log(events);
   };
-  
+
   const handleEventDelete = (eventToDelete) => {
     const startDate = new Date(eventToDelete.startDate);
     const key = `${startDate.getMonth() + 1}-${startDate.getFullYear()}-${startDate.getDate()}`;
-  
+
     const updatedEvents = { ...events };
-  
+
     if (updatedEvents[key]) {
       // >:(
       updatedEvents[key] = updatedEvents[key].filter(
         (event) => !(event.name === eventToDelete.name && event.startDate === eventToDelete.startDate)
       );
-  
+
       if (updatedEvents[key].length === 0) {
         delete updatedEvents[key];
       }
-  
+
       updateEvents(updatedEvents);
-     
+
       //onDeleteEvent(eventToDelete);
       setSelectedEventDetails(null);
       let id = 0;
-      axiosInstance.get(`api/events/${eventToDelete.id}/notifications/1`).then((res) => {console.log(res.data); id = res.data.id
-        if(id != 0)
-        axiosInstance.delete(`api/notifications/${id}`).then((res) => {console.log(res.data)});
-      }).catch((e)=>{
+      axiosInstance.get(`api/events/${eventToDelete.id}/notifications/1`).then((res) => {
+        console.log(res.data); id = res.data.id
+        if (id != 0)
+          axiosInstance.delete(`api/notifications/${id}`).then((res) => { console.log(res.data) });
+      }).catch((e) => {
         console.log(e);
       });
-      
-      axiosInstance.delete(`api/events/${eventToDelete.id}`).then((res) => {console.log(res.data)});
-      
+      axiosInstance.delete(`api/events/${eventToDelete.id}`).then((res) => { console.log(res.data) });
     }
-  
+
     console.log("Posle brisanja:", events);
   };
 
-  
+
 
   const handlePrevMonth = () => {
     const newDate = new Date(date);
@@ -313,18 +315,18 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
     setDate(newDate);
   };
 
- 
+
   return (
     <div>
       <div>
         <div className="button-container">
-        <Button onClick={handlePrevMonth} className="custom-button small-button">
+          <Button onClick={handlePrevMonth} className="custom-button small-button">
             Previous Month
           </Button>
           <h1>{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</h1>
           <Button onClick={handleNextMonth} className="custom-button small-button">
             Next Month
-         
+
           </Button>
         </div>
       </div>
@@ -345,22 +347,22 @@ const Calendar = ({ events, updateEvents, currentUser, categories, updateCategor
         </tbody>
       </table>
       <div>
-      {isEventVisible && !selectedEventDetails && (
-        <Event
-          onClose={handleCloseEvent}
-          startDate={selectedStartDate}
-          endDate={selectedEndDate}
-          categories={categories}
-        />
+        {isEventVisible && !selectedEventDetails && (
+          <Event
+            onClose={handleCloseEvent}
+            startDate={selectedStartDate}
+            endDate={selectedEndDate}
+            categories={categories}
+          />
         )}
- {selectedEventDetails && (
-        <Event
-          onClose={handleCloseEvent}
-          eventDetails={selectedEventDetails}
-          onDelete={handleEventDelete}
-          categories={categories}
-        />
-      )}
+        {selectedEventDetails && (
+          <Event
+            onClose={handleCloseEvent}
+            eventDetails={selectedEventDetails}
+            onDelete={handleEventDelete}
+            categories={categories}
+          />
+        )}
 
       </div>
     </div>
