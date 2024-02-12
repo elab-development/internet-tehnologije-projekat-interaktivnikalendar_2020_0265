@@ -462,3 +462,22 @@ button:hover {
 .control-panel button:hover {
   background-color: #aa2d2d;
 }
+
+input[type="file"] {
+  /* Hide the default button */
+  display: none;
+}
+
+.custom-file-input {
+  /* Style your custom button */
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-file-input:hover {
+  background-color: #0056b3;
+}

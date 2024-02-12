@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryEventController;
 use App\Http\Controllers\EventNotificationController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
@@ -62,6 +63,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/users/{id}/role', [RoleController::class, 'showRole']);
     Route::post('/users/role', [RoleController::class, 'replaceRole']);
     Route::resource('roles', RoleController::class);
+    Route::post('/users/{id}/upload', [ImageController::class, 'upload']);
+    Route::get('/users/{id}/image', [ImageController::class, 'show']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

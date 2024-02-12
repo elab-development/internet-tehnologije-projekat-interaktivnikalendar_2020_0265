@@ -74,7 +74,7 @@ const Navigacija = () => {
                     Calendar
                   </Link>
                   <Link className="nav-link" to="/profile">
-                    Profil
+                    Profile
                   </Link>
                   {(window.sessionStorage.getItem("role")
                   ) && (

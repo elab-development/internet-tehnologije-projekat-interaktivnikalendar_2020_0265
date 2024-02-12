@@ -13,17 +13,15 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
   const [evnts, setEvnts] = useState();
   const [sortBy, setSortBy] = useState('Date');
   const [sortOrder, setSortOrder] = useState('ASC');
-
+  const [image, setImage] = useState();
+  const [imageUrl, setImageUrl] = useState('https://placekitten.com/100/100');
 
   let i = 0;
-  
 
-  console.log('Events in Profile:', events);
 
   const [user, setUser] = useState({
     username: currentUser.username,
-    email: currentUser.email,
-    photoUrl: 'https://placekitten.com/100/100',
+    email: currentUser.email
   });
 
 
@@ -34,15 +32,19 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
   });
 
   useEffect(() => {
+    console.log('Events in Profile:', events);
     axiosInstance.get(`api/users/${window.sessionStorage.getItem("user_id")}`).then((res) => {
-      updateCurrentUser({
+      const user = {
         username: res.data.username,
         email: res.data.email
-      });
-      setUser({
-        username: res.data.username,
-        email: res.data.email,
-        photoUrl: 'https://placekitten.com/100/100'
+      }
+      updateCurrentUser(user);
+      setUser(user);
+      axiosInstance.get(`api/users/${window.sessionStorage.getItem("user_id")}/image`).then((ress) => {
+        if (ress.data.length != 0) {
+          setImage({ image: ress.data });
+          setImageUrl('http://127.0.0.1:8000/images/' + ress.data.name);
+        }
       });
     }).catch((e) => {
       console.log(e);
@@ -72,9 +74,6 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
       if (updatedEvents[key].length === 0) {
         delete updatedEvents[key];
       }
-
-
-
     }
     setEvents(updatedEvents);
     setSelectedEventDetails(null);
@@ -118,24 +117,16 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
     console.log('After handleChangePasswordModal:', isChangePasswordMode);
   };
 
-  const handleCategoryChange = (event) => {
-    setEventCategory(event.target.value);
-    axiosInstance.get(`api/categories/${event.target.value}/events`).then((res) => {
-      console.log(res.data);
-    });
-  };
-
-
   const toggleSortBy = () => {
-  const sortingOptions = ['Start Date', 'End Date', 'Name', 'Category', 'Date Added'];
-  const currentIndex = sortingOptions.indexOf(sortBy);
-  const nextIndex = (currentIndex + 1) % sortingOptions.length;
-  setSortBy(sortingOptions[nextIndex]);
+    const sortingOptions = ['Start Date', 'End Date', 'Name', 'Category', 'Date Added'];
+    const currentIndex = sortingOptions.indexOf(sortBy);
+    const nextIndex = (currentIndex + 1) % sortingOptions.length;
+    setSortBy(sortingOptions[nextIndex]);
   };
 
-  const toggleSortOrder= () => {
+  const toggleSortOrder = () => {
     setSortOrder(sortOrder == 'ASC' ? 'DESC' : 'ASC');
-};
+  };
 
   const handleSort = () => {
     let sortedEvents = [...evnts];
@@ -153,38 +144,66 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
         return sortOrder == 'ASC' ? dateA - dateB : dateB - dateA;
       });
     } else if (sortBy == 'Name') {
-    sortedEvents.sort((a, b) => {
-      const nameA = (a[0]).name.toLowerCase();
-      const nameB = (b[0]).name.toLowerCase();
-      return sortOrder == 'ASC' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-    });
-  } else if (sortBy == 'Category') {
-    sortedEvents.sort((a, b) => {
-      let nameA = 'zzz';
-      let nameB = 'zzz';
-      if(a[0].category)
-        nameA = (a[0]).category.name.toLowerCase();
-      if(b[0].category)
-        nameB = (b[0]).category.name.toLowerCase();
-      return sortOrder == 'ASC' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-    });
-  } else if (sortBy == 'Date Added') {
-    sortedEvents.sort((a, b) => {
-      const idA = (a[0]).id;
-      const idB = (b[0]).id;
-      return sortOrder == 'ASC' ? idA-idB : idB-idA;
-    });
-  }
+      sortedEvents.sort((a, b) => {
+        const nameA = (a[0]).name.toLowerCase();
+        const nameB = (b[0]).name.toLowerCase();
+        return sortOrder == 'ASC' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      });
+    } else if (sortBy == 'Category') {
+      sortedEvents.sort((a, b) => {
+        let nameA = 'zzz';
+        let nameB = 'zzz';
+        if (a[0].category)
+          nameA = (a[0]).category.name.toLowerCase();
+        if (b[0].category)
+          nameB = (b[0]).category.name.toLowerCase();
+        return sortOrder == 'ASC' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      });
+    } else if (sortBy == 'Date Added') {
+      sortedEvents.sort((a, b) => {
+        const idA = (a[0]).id;
+        const idB = (b[0]).id;
+        return sortOrder == 'ASC' ? idA - idB : idB - idA;
+      });
+    }
     setEvnts(sortedEvents);
   };
+
+  const handleChange = (e) => {
+    const fileName = e.target.files[0].name;
+    document.getElementById('fileName').textContent = fileName;
+    setImage({ image: e.target.files[0] });
+  }
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('image', image.image);
+    axiosInstance.post(`api/users/${window.sessionStorage.getItem("user_id")}/upload`, data).then((res) => {
+      console.log(res.data);
+      setImageUrl(URL.createObjectURL(image.image));
+      document.getElementById('fileName').textContent = null;
+    });
+  }
 
   return (
     <div className="profile-container">
       <div className="user-details">
-      
+
         <div className="profile-image">
-          <img src={user.photoUrl} alt="User Profile" />
+          <img src={imageUrl} alt="User Profile" />
         </div>
+        <form onSubmit={submitForm}>
+          <label htmlFor="fileUpload" className="custom-file-input">
+            Choose File
+          </label>
+          <input type="file" id="fileUpload" onChange={handleChange} />
+          <Button type="submit" className="small-button">
+            Upload
+          </Button>
+        </form>
+        <span id="fileName"></span>
+        <hr></hr>
         <div className="profile-info">
           <h2>{user.username}</h2>
           <p>{user.email}</p>
@@ -201,32 +220,32 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
         </div>
 
         <hr></hr>
-<div style={{ display: 'flex', alignItems: 'center' }}>
-        <Button onClick={() => handleSort()} className="small-button-sort">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button onClick={() => handleSort()} className="small-button-sort">
             Sort events by
           </Button>
-        <button onClick={toggleSortBy} style={{ marginLeft: '10px', marginRight: '10px', borderRadius: '5px'}}>{sortBy}</button>
-        <button onClick={toggleSortOrder} style={{ marginLeft: '10px', marginRight: '10px', borderRadius: '5px' }}>{sortOrder}</button>
+          <button onClick={toggleSortBy} style={{ marginLeft: '10px', marginRight: '10px', borderRadius: '5px' }}>{sortBy}</button>
+          <button onClick={toggleSortOrder} style={{ marginLeft: '10px', marginRight: '10px', borderRadius: '5px' }}>{sortOrder}</button>
         </div>
-        <input 
-        type="text"
-        className="event-input"
-        placeholder="Search events by name..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <select
-                className="event-input"
-                value={eventCategory}
-                onChange={(e) => setEventCategory(e.target.value)}
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+        <input
+          type="text"
+          className="event-input"
+          placeholder="Search events by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          className="event-input"
+          value={eventCategory}
+          onChange={(e) => setEventCategory(e.target.value)}
+        >
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
         {isChangeInfoModalVisible && (
           <ChangeInfoModal
@@ -238,34 +257,34 @@ const Profile = ({ events, setEvents, currentUser, updateCurrentUser, categories
           />
         )}
       </div>
-      
+
       <div className="upcoming-events">
-      
+
         <h3>Upcoming Events</h3>
         {evnts && evnts.length > 0 ? (
           <ul style={{ listStyle: 'none', padding: '0' }}>
-            
-              <div>
-                {evnts.map((event, index) => {
-                  event = event[0];
-  if ((event.category && event.category.id == eventCategory || eventCategory == 0) && event.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-    i++;
-    return (
-      <li
-      key={index}
-      style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
-      <div key={index} onClick={() => handleEventClick(event)}>
-        <strong>{event.name}</strong> ({event.category ? event.category.name : 'None'}):{' '}
-        {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`}{' '}
-        to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
-      </div>
-      </li>
-    );
-  }
-  return null;
-})}
-              </div>
-            
+
+            <div>
+              {evnts.map((event, index) => {
+                event = event[0];
+                if ((event.category && event.category.id == eventCategory || eventCategory == 0) && event.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  i++;
+                  return (
+                    <li
+                      key={index}
+                      style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+                      <div key={index} onClick={() => handleEventClick(event)}>
+                        <strong>{event.name}</strong> ({event.category ? event.category.name : 'None'}):{' '}
+                        {`${event.startDate.getDate()}-${event.startDate.getMonth() + 1}-${event.startDate.getFullYear()}`}{' '}
+                        to {`${event.endDate.getDate()}-${event.endDate.getMonth() + 1}-${event.endDate.getFullYear()}`}
+                      </div>
+                    </li>
+                  );
+                }
+                return null;
+              })}
+            </div>
+
             {i == 0 && (<p>No upcoming events for selected category.</p>)}
           </ul>
         ) : (
